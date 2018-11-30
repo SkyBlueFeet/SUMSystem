@@ -29,6 +29,7 @@
 <style scoped>
 .self-header-menu{
   color: #ccc;
+
 }
 .self-header-h{
   color: #fff;

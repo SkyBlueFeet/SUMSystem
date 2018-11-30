@@ -1,15 +1,58 @@
 <template>
 <el-row class="home">
+  <el-col :offset="4" :span="20" class="breadcrumb">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>Page</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{name:'Table'}">Table</el-breadcrumb-item>
+      </el-breadcrumb>
+  </el-col>
   <el-col :offset="4" :span="20" class="tool_menu">
-      <el-dropdown trigger="click" class="self_dropdown">
+    <el-col :span="8">
+      <span class="tool_menu_span">共&nbsp;&nbsp;{{tableData.tableDataLength}}&nbsp;条</span>
+      <el-dropdown trigger="click" class="self_dropdown" @command="handleCommand">
         <span class="el-dropdown-link">
-          &nbsp;&nbsp;{{dropdown.defaultItem}}条/页&nbsp;&nbsp;<i class="el-icon-arrow-down el-icon--right self_dropdown_icon"></i>
+          &nbsp;&nbsp;{{tableData.pageLength}}条/页&nbsp;&nbsp;<i class="el-icon-arrow-down el-icon--right self_dropdown_icon"></i>
         </span>
         <el-dropdown-menu slot="dropdown" class="self_dropdown_item">
-          <el-dropdown-item @click.native="log(text)" v-for="text in dropdown.item" :key="text">{{text}}条/页</el-dropdown-item>
+          <el-dropdown-item :command="text" v-for="text in tableData.item" :key="text">{{text}}条/页</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-    <el-button type="primary">主要按钮</el-button>
+    <el-button type="primary" size="medium"><i class="iconfont icon-add"></i> 增加用户</el-button>
+    </el-col>
+    <el-col :offset="10" :span="4">
+      <el-input
+          v-model="search.searchValue"
+          size="small"
+          placeholder="输入关键字搜索"/>
+    </el-col>
+    <el-col :span="2" class="searchOption">
+      <el-dropdown trigger="click" size="small" @command="handleOption" placement="bottom">
+        <span class="el-dropdown-link">
+          {{search.defaultOption.label}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item :command="index" v-for="(index,item) in search.searchOptions" :key="item">{{index.label}}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </el-col>
+    <!-- <el-col :span="8" class="search">
+      <el-col :span="4">
+        <el-input
+          v-model="search.searchValue"
+          size="small"
+          placeholder="输入关键字搜索"/>
+      </el-col>
+      <el-col :span="2" class="searchOption">
+      <el-dropdown trigger="click" size="small" @command="handleOption" placement="bottom">
+        <span class="el-dropdown-link">
+          {{search.defaultOption.label}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item :command="index" v-for="(index,item) in search.searchOptions" :key="item">{{index.label}}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      </el-col>
+    </el-col> -->
   </el-col>
   <el-col :offset="4" :span="20">
   <el-table
@@ -87,12 +130,6 @@
 <template slot-scope="scope">{{ scope.row.date }}</template>
     </el-table-column>
     <el-table-column>
-      <template slot="header" slot-scope="scope">
-        <el-input
-          v-model="search"
-          size="mini"
-          placeholder="输入关键字搜索"/>
-      </template>
       <template slot-scope="scope" class="editBtn">
         <el-button
           size="mini"
@@ -109,10 +146,11 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage4"
-      :page-sizes="[20, 40, 50]"
+      :page-sizes="tableData.item"
       :page-size="tableData.pageLength"
       layout="total, sizes, prev, pager, next, jumper"
       class="pagination"
+      :background="true"
       :total="tableData.tableDataLength">
     </el-pagination>
   </div>
@@ -131,24 +169,63 @@
         header_row:{
           'color':'blue'
         },
-        dropdown:{
-          defaultItem:"20",
-          item:[20,40,50]
-        },
         tableData:{
           dataAll:[],
           defaultData:[],
           tableDataLength:0,
           pageLength:20,
-        }
+          item:[20,40,50,80,100],
+        },
+        search:{
+          searchOptions: [{
+            value: 'h_create_id',
+            label: 'ID'
+          }, {
+            value: 'createdate',
+            label: '创建日期'
+          }, {
+            value: 'nickname',
+            label: '头条号'
+          }, {
+            value: 'realname',
+            label: '姓名'
+          }, {
+            value: 'gender',
+            label: '性别'
+          }, {
+            value: 'iscertification',
+            label: '是否实名'
+          }, {
+            value: 'account',
+            label: '账号'
+          }, {
+            value: 'compony',
+            label: '单位'
+          }],
+          defaultOption:{
+            value: 'nickname',
+            label: '头条号'
+          },
+          searchValue:''
+        },
       }
     },
   mounted: function(){
       this.getTableData()
   },
     methods: {
+      handleOption(command){
+        this.search.defaultOption=command;
+        this.$message('click on item ' + command.value);
+      },
+      handleCommand(command) {
+        this.tableData.pageLength=command;
+        this.handleSizeChange(command);
+        //this.$message('click on item ' + command);
+        console.log(command)
+      },
       log(text){
-        this.dropdown.defaultItem=text;
+        this.tableData.pageLength=text;
         this.handleSizeChange(text);
       },
       iscertification(row, column){
@@ -189,7 +266,6 @@
         let start=(this.tableData.pageLength)*(val-1);
         let end=(this.tableData.pageLength)*val;
         this.tableData.defaultData=this.tableData.dataAll.slice(start,end);
-        //alert(`${start},${end}`);
       }
     }
   }
@@ -200,15 +276,23 @@
   padding-top: 50px;
 }
 .tool_menu{
-  height: 100px;
   padding: 10px;
 }
+.tool_menu_span{
+  font-size: 13px;
+  font-family: Arial;
+}
+.searchOption{
+  cursor:pointer;
+  padding-top: 5px;
+  text-align: center;
+}
 .self_dropdown_block{
-  width: 110px;
+  width: 120px;
 }
 .self_dropdown{
   font-size: 13px;
-  width: 100px;
+  width: 110px;
   padding-left: 5px;
   padding-top: 5px;
   padding-right: 5px;
@@ -225,15 +309,15 @@
   color: #ccc;
 }
 .self_dropdown_item{
-  width: 110px;
+  width: 120px;
 }
 .tableHeader{
   color: #409EFF;
 }
 .breadcrumb{
-  line-height: 50px;
-  height: 50px;
-  width: 100%;
+  padding-top: 20px;
+  height: 40px;
+  cursor:pointer;
 }
 .block{
   position: relative;
