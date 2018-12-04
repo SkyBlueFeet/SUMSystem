@@ -5,8 +5,22 @@ var list = {
         DESC: 'SELECT * FROM tableData ORDER BY ? DESC',
         FILTER: 'SELECT * FROM tableData WHERE ?=?',
     },
-    searchOption: "SELECT `'h_create_id'` AS h_create_id,`'createdate'` AS createdate,`'nickname'` AS nickname,`'account'` AS account, `'realname'` realname,`'gender'` gender, `'iscertification'` iscertification, `'compony'` compony,`'focus'` focus FROM tableData where `?` LIKE ? ",
-    searchLoad: "SELECT `?` AS value from tableData WHERE `?` LIKE ?"
+    searchOption: [
+        'SELECT * FROM tableData WHERE h_create_id LIKE ?',
+        'SELECT * FROM tableData WHERE createdate LIKE ?',
+        'SELECT * FROM tableData WHERE nickname LIKE ?',
+        'SELECT * FROM tableData WHERE realname LIKE ?',
+        'SELECT * FROM tableData WHERE account LIKE ?',
+        'SELECT * FROM tableData WHERE compony LIKE ?',
+    ],
+    searchLoad: [
+        "SELECT h_create_id AS value from tableData WHERE h_create_id LIKE ?",
+        "SELECT createdate AS value from tableData WHERE createdate LIKE ?",
+        "SELECT nickname AS value from tableData WHERE nickname LIKE ?",
+        "SELECT realname AS value from tableData WHERE realname LIKE ?",
+        "SELECT account AS value from tableData WHERE account LIKE ?",
+        "SELECT compony AS value from tableData WHERE compony LIKE ?",
+    ],
 }
 
 module.exports = list

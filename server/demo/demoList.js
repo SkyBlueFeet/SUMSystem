@@ -38,25 +38,6 @@ module.exports = {
         })
     },
     searchOption: function(req, res, next) {
-        // 查询所有用户
-        pool.getConnection(function(err, connection) {
-            if (err) {
-                errLog(err)
-            } else {
-                var data = req.body
-                console.log($sql.searchOption[data.option])
-                connection.query($sql.searchOption[data.option], ["%" + data.value + "%"], (err, result) => {
-                    if (err) {
-                        errLog(err)
-                    } else {
-                        jsonWrite(res, result) // 以json形式，把操作结果返回给前台页面
-                        connection.release() // 释放连接
-                    }
-                })
-            }
-        })
-    },
-    searchOption: function(req, res, next) {
         // 搜索选项
         pool.getConnection(function(err, connection) {
             if (err) {
@@ -64,7 +45,7 @@ module.exports = {
             } else {
                 var data = req.body
                 console.log(data)
-                connection.query($sql.searchOption, [data.option, "%" + data.value + "%"], (err, result) => {
+                connection.query($sql.searchOption[data.option], ["%" + data.value + "%"], (err, result) => {
                     if (err) {
                         errLog(err)
                     } else {
@@ -83,7 +64,7 @@ module.exports = {
             } else {
                 var data = req.body
                 console.log(data)
-                connection.query($sql.searchLoad, [data.option, data.option, "%" + data.value + "%"], (err, result) => {
+                connection.query($sql.searchLoad[data.option], ["%" + data.value + "%"], (err, result) => {
                     if (err) {
                         errLog(err)
                     } else {
@@ -94,7 +75,7 @@ module.exports = {
             }
         })
     },
-    queryLimit: function(req, res, next) {
+    queryOrder: function(req, res, next) {
         // 查询所有用户
         pool.getConnection(function(err, connection) {
             if (err) {
