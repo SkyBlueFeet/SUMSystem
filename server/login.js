@@ -1,28 +1,31 @@
 var mysql = require('mysql')
 
 var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  port: '3306',
-  database: 'jsdb'
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    port: '3306',
+    database: 'app'
 })
 
 connection.connect()
-var sql = 'select * from user where account = ? and password = ?'
-// 查
-connection.query(sql, ['123456789', '52'], function(err, result) {
-  if (err) {
-    console.log('[SELECT ERROR] - ', err.message)
-    return
-  } else if (result === '') {
-    console.log('登录失败')
-  }
-  console.log('--------------------------SELECT----------------------------')
-  console.log(result)
-  console.log(
-    '------------------------------------------------------------\n\n'
-  )
+var sql = "SELECT * from tabledata where position(? in `?`)"
+var mysql = "select * from user_acc where account = ? AND tel= ?"
+    // 查
+var option = 'h_create_id';
+var value = 10;
+//var values = "%" + value + "%";
+//console.log(values)
+connection.query(sql, [value, option], function(err, result) {
+    if (err) {
+        console.log('[SELECT ERROR] - ', err.message)
+        return
+    }
+    console.log('--------------------------SELECT----------------------------')
+    console.log(`result.length:${result.length}`)
+    console.log(
+        '------------------------------------------------------------\n\n'
+    )
 })
 
 connection.end()

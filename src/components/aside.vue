@@ -2,12 +2,13 @@
  <el-row class="self-aside">
    <el-col :span="24" class="self-aside-m">
     <el-menu
-      :default-active="this.$route.name"
+      :default-active="$route.name"
       class="el-menu-vertical-demo self-aside-m"
       :unique-opened="true"
       background-color="#545c64"
       text-color="#fff"
-      active-text-color="#ffd04b">
+      active-text-color="#ffd04b"
+      router>
       <el-menu-item index="dynamic" @click="log">
         <i class="el-icon-setting"></i>
         <span slot="title">实时动态</span>
@@ -18,8 +19,8 @@
           <span>Page</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="Table">Table</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
+          <el-menu-item route="/page/table" index="Table">Table</el-menu-item>
+          <el-menu-item route="/page/edit" index="Edit">Edit</el-menu-item>
           <el-menu-item index="1-3">选项3</el-menu-item>
           <el-menu-item index="1-4-1">选项1</el-menu-item>
         </el-menu-item-group>

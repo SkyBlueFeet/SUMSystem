@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <router-view name="header" class="header"></router-view>
+    <transition name="el-fade-in">
     <router-view class="main"></router-view>
+    </transition>
     <router-view name="aside" class="aside"></router-view>
   </div>
 </template>

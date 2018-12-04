@@ -13,4 +13,10 @@ router.all('/limit', bodyParser.json(), (req, res, next) => {
 router.all('/count', bodyParser.json(), (req, res, next) => {
     list.queryLength(req, res, next)
 })
+router.all('/searchOption', bodyParser.json(), (req, res, next) => {
+    list.searchOption(req, res, next)
+})
+router.all('/searchLoad', bodyParser.json(), (req, res, next) => {
+    list.searchLoad(req, res, next)
+})
 module.exports = router
