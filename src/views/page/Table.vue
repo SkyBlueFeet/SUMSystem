@@ -11,10 +11,13 @@
       <el-pagination @size-change="handleSizeChange" :current-page.sync="page" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="total,sizes" :background="true" :total="tableData.tableDataLength">
       </el-pagination>
     </el-col>
-    <el-col :offset="0" :span="2">
+    <el-col :span="2">
       <el-button type="primary" @click.native="log(page)" size="mini"><i class="iconfont icon-add"></i> 增加用户</el-button>
     </el-col>
-    <el-col :offset="12" :span="6">
+    <el-col :offset="9" :span="3" class="filter">
+      <el-button type="info" @click="Dialog=true" size="mini"><i class="iconfont icon-shaixuan1"></i> 自定义筛选</el-button>
+    </el-col>
+    <el-col :span="6">
       <el-autocomplete placeholder="请输入内容" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false" :debounce="200" size="small" select-when-unmatched @input.native="reGetData(search.searchValue)" @select="handleSelect"
           @compositionstart.native="handleInputState(true)" @compositionend.native="handleInputState(false)" v-model="search.searchValue" class="input-with-select">
         <el-select @change="handleOption" slot="prepend" v-model="search.defaultOption.value" placeholder="请选择" style="width:100px;">
@@ -25,25 +28,25 @@
   </el-col>
   <el-col :offset="4" :span="20">
     <transition name="el-zoom-in-top">
-      <el-table height="530" v-loading="loading" element-loading-text="玩命加载中..." @sort-change="SortChange" ref="multipleTable" :data="data" tooltip-effect="dark" @header-click="clickHeader" :highlight-current-row="true" style="width: 100%" :border="true">
-        <el-table-column sortable='custom' :sort-orders="['descending', 'ascending', null]" prop="h_create_id" label="ID" align="center" width="120">
+      <el-table height="540" v-loading="loading" :empty-text="emptyText" element-loading-text="玩命加载中..." @sort-change="SortChange" ref="multipleTable" :data="data" tooltip-effect="dark" @header-click="clickHeader" :highlight-current-row="true" style="width: 100%"
+          border>
+        <el-table-column sortable='custom' column-key="h_create_id" :sort-orders="sortorders" prop="h_create_id" label="ID" align="center" :resizable="false" width="120">
         </el-table-column>
-        <el-table-column prop="createdate" label="注册日期" align="center" width="120">
+        <el-table-column sortable='custom' column-key="createdate" :sort-orders="sortorders" prop="createdate" label="注册日期" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="nickname" label="头条号" align="center" width="120">
+        <el-table-column prop="nickname" column-key="nickname" sortable="custom" label="头条号" align="center" width="120">
         </el-table-column>
-        <el-table-column prop="realname" label="姓名" width="80" align="center" show-overflow-tooltip>
+        <el-table-column prop="realname" column-key="realname" sortable="custom" label="姓名" width="80" align="center" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="gender" filter-placement="bottom" label="性别" align="center" :filters="genderfilters" :filter-method="filterTag" width="80">
+        <el-table-column prop="gender" column-key="gender" sortable="custom" label="性别" align="center" width="80">
         </el-table-column>
-        <el-table-column prop="iscertification" filter-placement="bottom" label="是否实名" width="120" align="center" :filters="iscFilters" :filter-method="filterIsc" :formatter="iscertification">
+        <el-table-column prop="iscertification" column-key="iscertification" sortable="custom" label="是否实名" width="120" align="center" :formatter="iscertification">
         </el-table-column>
-        <el-table-column prop="account" label="账号" align="center" width="150" show-overflow-tooltip>
+        <el-table-column prop="account" column-key="account" label="账号" align="center" width="150" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="compony" label="单位" align="center" width="120" show-overflow-tooltip>
-          <span slot="empty">未填写</span>
+        <el-table-column prop="compony" column-key="compony" label="单位" align="center" width="120" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="focus" label="关注" align="center" width="120">
+        <el-table-column prop="focus" column-key="focus" label="关注" align="center" width="120">
         </el-table-column>
         <el-table-column width="10">
           <template slot-scope="scope">{{ scope.row.date }}</template>
@@ -56,42 +59,135 @@
         </el-table-column>
       </el-table>
     </transition>
-    <div class="block">
-      <el-pagination v-if="tableData.paginationShow" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="sizes, prev, pager, next" class="pagination"
-          :background="true" :total="tableData.tableDataLength">
-      </el-pagination>
-    </div>
+    <el-col :span="24">
+      <el-col :span="11" :offset="13" class="block">
+        <el-pagination v-if="tableData.paginationShow" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="sizes, prev, pager, next" :background="true"
+            :total="tableData.tableDataLength">
+        </el-pagination>
+      </el-col>
+    </el-col>
   </el-col>
+  <el-dialog :visible.sync="Dialog" width="35%" :lock-scroll="false"
+    title="自定义筛选" :show-close="false" :close-on-click-modal="false"
+    center>
+    <el-form ref="form" :model="form" label-width="90px">
+      <el-form-item label="活动名称">
+        <el-input size="mini" v-model="form.name" style="width:380px"></el-input>
+      </el-form-item>
+      <el-form-item label="是否实名">
+        <el-select size="mini" v-model="form.isc.value" @change="getItem_isc">
+          <el-option v-for="item in iscOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-select size="mini" v-model="form.gender.value" @change="getItem_gender">
+          <el-option v-for="item in genderOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="注册时间段" class="pointer">
+        <el-date-picker size="mini" value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日" @change="log(DateScope)" :editable="false" v-model="DateScope" :default-value="form.defaultDate" type="daterange" align="right" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
+        </el-date-picker>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="Dialog = false">取 消</el-button>
+      <el-button type="primary" @click="Dialog = false">确 定</el-button>
+    </div>
+  </el-dialog>
 </el-row>
 </template>
 
 <script>
 import {
-  my_desc_sort,
-  my_asc_sort
+  id_desc_sort,
+  id_asc_sort,
+  date_asc_sort,
+  date_desc_sort,
+  nickname_desc_sort,
+  nickname_asc_sort,
+  realname_asc_sort,
+  realname_desc_sort,
+  gender_asc_sort,
+  gender_desc_sort,
+  isc_asc_sort,
+  isc_desc_sort
 } from '@/utils/table'
 export default {
   data() {
     return {
-      show: false,
+      pickerOptions2: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+            }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+            }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+            }]
+      },
+      DateScope: '',
+      defaultIsc: 'null',
+      Dialog: false,
+      form: {
+        name: '',
+        isc:{
+        value:'null',
+        label: '不限'
+        },
+        startDate: '',
+        endDate: '',
+        defaultDate:this.timer(),
+        gender:{
+          label:'不限',
+          value:'null'
+        }
+      },
+      iscOptions: [{
+        value: 'null',
+        label: '不限'
+        },{
+        value: '1',
+        label: '已实名'
+        }, {
+        value: '0',
+        label: '未实名'
+        }],
+      genderOptions: [{
+        value: 'null',
+        label: '不限'
+        },{
+        value: '男',
+        label: '男'
+        }, {
+        value: '女',
+        label: '女'
+        }],
       getInputState: false,
       loading: false,
       page: 1,
-      id_order: '',
-      genderfilters: [{
-        text: '男',
-        value: '男'
-      }, {
-        text: '女',
-        value: '女'
-      }],
-      iscFilters: [{
-        text: '已实名',
-        value: 1
-      }, {
-        text: '未实名',
-        value: 0
-      }],
+      emptyText: '暂无数据',
+      sortorders: ['descending', 'ascending', null],
+      formLabelWidth: '120px',
       tableData: {
         dataAll: [],
         tableDataLength: 0,
@@ -132,41 +228,106 @@ export default {
   },
   mounted() {
     this.getTableData();
+    this.timer();
   },
   computed: {
     data() {
-      let start = (this.tableData.pageLength) * (this.page - 1);
-      let end = (this.tableData.pageLength) * this.page;
-      return this.tableData.dataAll.slice(start, end)
-    }
+      let show = this.tableData.dataAll;
+      let length = this.tableData.pageLength;
+      let page = this.page;
+      let start = length * (page - 1);
+      let end = length * page;
+      return show.slice(start, end)
+    },
   },
   methods: {
+    timer() {
+      //获取当日时间的前几天日期
+      const date = new Date()
+      date.setDate(date.getDate()-30)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      const now_time = (`${year}-${month}-${day}`)
+      this.log(now_time)
+      return now_time
+    },
+    getItem_gender(item){
+        this.log(item)
+    },
+    getItem_isc(item){
+      this.log(item)
+    },
+    showDialog(bool) {
+      this.showDialog2 = bool;
+      this.showDialog1 = bool;
+    },
     clickHeader(column, event) {
-      this.$refs.multipleTable.clearSort();
+      setTimeout(() => {
+        this.$refs.multipleTable.clearSort();
+        //this.$refs.multipleTable.doLayout();
+        this.Sort('ascending', 'h_create_id');
+      }, 100)
     },
     SortChange(column, prop, order) {
-      if (column.prop === 'h_create_id') this.idSort(column.order);
+      this.Sort(column.order, column.prop);
     },
-    idSort(order) {
-      console.log(order);
+    Sort(order, object) {
       this.tableData.paginationShow = false;
       this.loading = true;
       this.page = 1;
-      if (order === 'descending') {
-        this.id_order = 'descending';
-        this.timeout = setTimeout(() => {
-          this.tableData.dataAll = this.tableData.dataAll.sort(my_desc_sort);
-          this.tableData.paginationShow = true;
-          this.loading = false;
-        }, 100);
-      } else if (order === 'ascending') {
-        this.id_order = 'ascending';
-        this.timeout = setTimeout(() => {
-          this.tableData.dataAll = this.tableData.dataAll.sort(my_asc_sort);
-          this.tableData.paginationShow = true;
-          this.loading = false;
-        }, 100);
-      }
+      let data = this.tableData.dataAll;
+      setTimeout(() => {
+        switch (true) {
+          case (order === 'descending' && object === 'h_create_id'):
+            data = data.sort(id_desc_sort);
+            break;
+          case (order === 'ascending' && object === 'h_create_id'):
+            data = data.sort(id_asc_sort);
+            break;
+          case (order === 'descending' && object === 'createdate'):
+            data = data.sort(date_desc_sort);
+            break;
+          case (order === 'ascending' && object === 'createdate'):
+            data = data.sort(id_asc_sort);
+            break;
+          case (order === 'ascending' && object === 'nickname'):
+            data = data.sort(nickname_asc_sort);
+            break;
+          case (order === 'descending' && object === 'nickname'):
+            data = data.sort(nickname_desc_sort);
+            break;
+          case (order === 'ascending' && object === 'realname'):
+            data = data.sort(realname_asc_sort);
+            break;
+          case (order === 'descending' && object === 'realname'):
+            data = data.sort(realname_desc_sort);
+            break;
+          case (order === 'ascending' && object === 'gender'):
+            data = data.sort(gender_asc_sort);
+            break;
+          case (order === 'descending' && object === 'gender'):
+            data = data.sort(gender_desc_sort);
+            break;
+          case (order === 'ascending' && object === 'iscertification'):
+            data = data.sort(isc_asc_sort);
+            break;
+          case (order === 'descending' && object === 'iscertification'):
+            data = data.sort(isc_desc_sort);
+            break;
+          case (order === 'ascending' && object === 'account'):
+            data = data.sort(isc_asc_sort);
+            break;
+          case (order === 'descending' && object === 'account'):
+            data = data.sort(isc_desc_sort);
+            break;
+          default:
+            data = data.sort(id_asc_sort);
+            break;
+        }
+        this.tableData.paginationShow = true;
+        this.loading = false;
+      }, 100);
     },
     handleSelect(item) {
       //选中选项后处理
@@ -222,7 +383,7 @@ export default {
         });
         this.tableData.paginationShow = true;
         this.loading = false;
-      }, 1000);
+      }, 800);
     },
     handleOption(command) {
       //更改显示的搜索选项
@@ -249,7 +410,7 @@ export default {
           this.tableData.paginationShow = true;
           this.loading = false;
         });
-      }, 1000);
+      }, 500);
     },
     handleSizeChange(val) {
       //改变每页数据条数
@@ -263,15 +424,19 @@ export default {
       }, 100)
     },
     handleCurrentChange(val) {
-      //装载每页数据
-      this.page = val;
+      //切换页数
+      this.loading = true;
+      setTimeout(() => {
+        this.page = val;
+        this.loading = false;
+      }, 100)
     },
-    log(row, index) {
-      console.log(row, index)
+    log(index) {
+      console.log(index)
     },
     iscertification(row, column) {
       //0,1的转换
-      return row.iscertification == 1 ? '已实名' : row.sex == 0 ? '未实名' : '未知';
+      return row.iscertification === 1 ? '已实名' : '未实名';
     },
     handleEdit(index, row) {
       //编辑按钮
@@ -286,14 +451,6 @@ export default {
         this.$refs.multipleTable.clearSelection();
       }
     },
-    filterTag: (value, row) => {
-      //性别筛选
-      return row.gender === value
-    },
-    filterIsc: (value, row) => {
-      //是否实名筛选
-      return row.iscertification === value
-    },
   }
 }
 </script>
@@ -303,6 +460,15 @@ export default {
   padding-top: 50px;
 }
 
+.unselect {
+  /* Opera */
+  -webkit-user-select: none !important;
+  /* 禁选 */
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
 .tool_menu {
   padding: 10px;
 }
@@ -310,10 +476,6 @@ export default {
 .tool_menu_span {
   font-size: 13px;
   font-family: Arial;
-}
-
-.selectLen {
-  width: 100px;
 }
 
 .searchOption {
@@ -339,6 +501,10 @@ export default {
   cursor: pointer;
 }
 
+.filter {
+  text-align: center;
+}
+
 .self_dropdown:hover {
   border: 1px #409EFF solid;
 }
@@ -362,16 +528,10 @@ export default {
   height: 30px;
   width: 100%;
 }
-
-.block {
-  position: relative;
-  height: 30px;
-  width: 100%;
+.pointer{
+  cursor:pointer;/*鼠标变为手形*/
 }
-
-.pagination {
-  position: absolute;
-  top: 20px;
-  right: 100px;
+.block {
+  padding: 10px;
 }
 </style>

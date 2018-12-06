@@ -16,8 +16,7 @@ export default {
 
 <style>
 html,body,#app{
-  position: relative;
-  height:100%;
+  height:99%;
 }
 *{
   padding: 0px;
