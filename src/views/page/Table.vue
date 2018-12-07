@@ -8,14 +8,17 @@
   </el-col>
   <el-col :offset="4" :span="20" class="tool_menu">
     <el-col :span="4">
-      <el-pagination @size-change="handleSizeChange" :current-page.sync="page" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="total,sizes" :background="true" :total="tableData.tableDataLength">
-      </el-pagination>
+      <el-pagination @size-change="handleSizeChange" :current-page.sync="page" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="total,sizes" :background="true" :total="tableData.tableDataLength"></el-pagination>
     </el-col>
     <el-col :span="2">
-      <el-button type="primary" @click.native="log(page)" size="mini"><i class="iconfont icon-add"></i> 增加用户</el-button>
+      <el-button type="primary" @click.native="log(page)" size="mini">
+        <i class="iconfont icon-add"></i> 增加用户
+      </el-button>
     </el-col>
     <el-col :offset="9" :span="3" class="filter">
-      <el-button type="info" @click="Dialog=true" size="mini"><i class="iconfont icon-shaixuan1"></i> 自定义筛选</el-button>
+      <el-button type="info" @click="Dialog=true" size="mini">
+        <i class="iconfont icon-shaixuan1"></i> 自定义筛选
+      </el-button>
     </el-col>
     <el-col :span="6">
       <el-autocomplete placeholder="请输入内容" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false" :debounce="200" size="small" select-when-unmatched @input.native="reGetData(search.searchValue)" @select="handleSelect"
@@ -30,24 +33,15 @@
     <transition name="el-zoom-in-top">
       <el-table height="540" v-loading="loading" :empty-text="emptyText" element-loading-text="玩命加载中..." @sort-change="SortChange" ref="multipleTable" :data="data" tooltip-effect="dark" @header-click="clickHeader" :highlight-current-row="true" style="width: 100%"
           border>
-        <el-table-column sortable='custom' column-key="h_create_id" :sort-orders="sortorders" prop="h_create_id" label="ID" align="center" :resizable="false" width="120">
-        </el-table-column>
-        <el-table-column sortable='custom' column-key="createdate" :sort-orders="sortorders" prop="createdate" label="注册日期" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="nickname" column-key="nickname" sortable="custom" label="头条号" align="center" width="120">
-        </el-table-column>
-        <el-table-column prop="realname" column-key="realname" sortable="custom" label="姓名" width="80" align="center" show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column prop="gender" column-key="gender" sortable="custom" label="性别" align="center" width="80">
-        </el-table-column>
-        <el-table-column prop="iscertification" column-key="iscertification" sortable="custom" label="是否实名" width="120" align="center" :formatter="iscertification">
-        </el-table-column>
-        <el-table-column prop="account" column-key="account" label="账号" align="center" width="150" show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column prop="compony" column-key="compony" label="单位" align="center" width="120" show-overflow-tooltip>
-        </el-table-column>
-        <el-table-column prop="focus" column-key="focus" label="关注" align="center" width="120">
-        </el-table-column>
+        <el-table-column sortable="custom" column-key="h_create_id" :sort-orders="sortorders" prop="h_create_id" label="ID" align="center" :resizable="false" width="120"></el-table-column>
+        <el-table-column sortable="custom" column-key="createdate" :sort-orders="sortorders" prop="createdate" label="注册日期" align="center" width="120"></el-table-column>
+        <el-table-column prop="nickname" column-key="nickname" sortable="custom" label="头条号" align="center" width="120"></el-table-column>
+        <el-table-column prop="realname" column-key="realname" sortable="custom" label="姓名" width="80" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="gender" column-key="gender" sortable="custom" label="性别" align="center" width="80"></el-table-column>
+        <el-table-column prop="iscertification" column-key="iscertification" sortable="custom" label="是否实名" width="120" align="center" :formatter="iscertification"></el-table-column>
+        <el-table-column prop="account" column-key="account" label="账号" align="center" width="150" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="compony" column-key="compony" label="单位" align="center" width="120" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="focus" sortable="custom" column-key="focus" label="关注" align="center" width="120"></el-table-column>
         <el-table-column width="10">
           <template slot-scope="scope">{{ scope.row.date }}</template>
         </el-table-column>
@@ -62,18 +56,12 @@
     <el-col :span="24">
       <el-col :span="11" :offset="13" class="block">
         <el-pagination v-if="tableData.paginationShow" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="sizes, prev, pager, next" :background="true"
-            :total="tableData.tableDataLength">
-        </el-pagination>
+            :total="tableData.tableDataLength"></el-pagination>
       </el-col>
     </el-col>
   </el-col>
-  <el-dialog :visible.sync="Dialog" width="35%" :lock-scroll="false"
-    title="自定义筛选" :show-close="false" :close-on-click-modal="false"
-    center>
-    <el-form ref="form" :model="form" label-width="90px">
-      <el-form-item label="活动名称">
-        <el-input size="mini" v-model="form.name" style="width:380px"></el-input>
-      </el-form-item>
+  <el-dialog :visible.sync="Dialog" width="35%" :lock-scroll="false" title="自定义筛选" :show-close="false" :close-on-click-modal="false">
+    <el-form ref="form" :model="form" label-width="90px" class="filterForm">
       <el-form-item label="是否实名">
         <el-select size="mini" v-model="form.isc.value" @change="getItem_isc">
           <el-option v-for="item in iscOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
@@ -85,9 +73,29 @@
         </el-select>
       </el-form-item>
       <el-form-item label="注册时间段" class="pointer">
-        <el-date-picker size="mini" value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日" @change="log(DateScope)" :editable="false" v-model="DateScope" :default-value="form.defaultDate" type="daterange" align="right" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
+        <el-date-picker size="mini" value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日" @change="log(DateScope)" :editable="false" v-model="DateScope" :default-value="form.defaultDate" type="daterange" align="right" range-separator="-"
+            start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
         </el-date-picker>
       </el-form-item>
+      <transition name="el-zoom-in-top">
+        <el-form-item v-show="focusSelect" label="关注数">
+          <el-select size="mini" @change="getForm_Focus" v-model="form.focus.value">
+            <el-option :label="focusOptions_t.label" :value="focusOptions_t.value"></el-option>
+            <el-option v-for="item in focusOptions" :label="item.label" :value="item.value" :key="item.start">
+              <span style="font-size: 13px;text-align:center">{{ item.start }}-{{item.end}}</span>
+            </el-option>
+            <el-option :label="focusOptions_b.label" :value="focusOptions_b.value"></el-option>
+            <el-option :label="focusOptions_c.label" :value="focusOptions_c.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </transition>
+      <transition name="el-zoom-in-top">
+        <el-form-item v-show="focusCustom">
+          <el-input size="mini" v-model="form.name" style="width:160px"></el-input>
+          <span>-</span>
+          <el-input size="mini" v-model="form.name" style="width:160px"></el-input>
+        </el-form-item>
+      </transition>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="Dialog = false">取 消</el-button>
@@ -110,122 +118,186 @@ import {
   gender_asc_sort,
   gender_desc_sort,
   isc_asc_sort,
-  isc_desc_sort
-} from '@/utils/table'
+  isc_desc_sort,
+  focus_asc_sort,
+  focus_desc_sort
+} from "@/utils/table";
 export default {
   data() {
     return {
+      focusSelect: true,
+      focusCustom: false,
       pickerOptions2: {
         disabledDate(time) {
           return time.getTime() > Date.now();
         },
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
           }
-            }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-            }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-            }]
+        ]
       },
-      DateScope: '',
-      defaultIsc: 'null',
+      DateScope: "",
+      defaultIsc: "null",
       Dialog: false,
       form: {
-        name: '',
-        isc:{
-        value:'null',
-        label: '不限'
+        name: "",
+        isc: {
+          value: null,
+          label: "不限"
         },
-        startDate: '',
-        endDate: '',
-        defaultDate:this.timer(),
-        gender:{
-          label:'不限',
-          value:'null'
+        focus: {
+          value: 0
+        },
+        startDate: "",
+        endDate: "",
+        defaultDate: this.timer(),
+        gender: {
+          label: "不限",
+          value: null
         }
       },
-      iscOptions: [{
-        value: 'null',
-        label: '不限'
-        },{
-        value: '1',
-        label: '已实名'
-        }, {
-        value: '0',
-        label: '未实名'
-        }],
-      genderOptions: [{
-        value: 'null',
-        label: '不限'
-        },{
-        value: '男',
-        label: '男'
-        }, {
-        value: '女',
-        label: '女'
-        }],
+      iscOptions: [
+        {
+          value: null,
+          label: "不限"
+        },
+        {
+          value: "1",
+          label: "已实名"
+        },
+        {
+          value: "0",
+          label: "未实名"
+        }
+      ],
+      genderOptions: [
+        {
+          value: null,
+          label: "不限"
+        },
+        {
+          value: "男",
+          label: "男"
+        },
+        {
+          value: "女",
+          label: "女"
+        }
+      ],
+      focusOptions_t: {
+        label: "1000以下",
+        start: 0,
+        end: 1000,
+        value: 0
+      },
+      focusOptions: [
+        {
+          label: "1001 - 10000",
+          start: 1001,
+          end: 10000,
+          value: 1
+        },
+        {
+          label: "10000 - 100000",
+          start: 10001,
+          end: 100000,
+          value: 2
+        },
+        {
+          label: "100001 - 500000",
+          start: 100001,
+          end: "500000",
+          value: 3
+        }
+      ],
+      focusOptions_b: {
+        label: "500000以上",
+        start: 500001,
+        value: 4
+      },
+      focusOptions_b: {
+        label: "不限",
+        value: false
+      },
+      focusOptions_c: {
+        label: "自定义",
+        value: null
+      },
       getInputState: false,
       loading: false,
       page: 1,
-      emptyText: '暂无数据',
-      sortorders: ['descending', 'ascending', null],
-      formLabelWidth: '120px',
+      emptyText: "暂无数据",
+      sortorders: ["descending", "ascending", null],
+      formLabelWidth: "120px",
       tableData: {
+        pageData: [],
         dataAll: [],
         tableDataLength: 0,
         pageLength: 20,
         item: [20, 40, 50, 80, 100],
-        paginationShow: true,
+        paginationShow: true
       },
       search: {
-        searchOptions: [{
-          value: 0,
-          label: 'ID'
-          }, {
-          value: 1,
-          label: '创建日期'
-          }, {
-          value: 2,
-          label: '头条号'
-          }, {
-          value: 3,
-          label: '姓名'
-          }, {
-          value: 4,
-          label: '账号'
-          }, {
-          value: 5,
-          label: '单位'
-          }],
+        searchOptions: [
+          {
+            value: 0,
+            label: "ID"
+          },
+          {
+            value: 1,
+            label: "创建日期"
+          },
+          {
+            value: 2,
+            label: "头条号"
+          },
+          {
+            value: 3,
+            label: "姓名"
+          },
+          {
+            value: 4,
+            label: "账号"
+          },
+          {
+            value: 5,
+            label: "单位"
+          }
+        ],
         defaultOption: {
           value: 2,
-          label: '头条号'
+          label: "头条号"
         },
-        searchValue: ''
-      },
-    }
+        searchValue: ""
+      }
+    };
   },
-  watch: {
-
-  },
+  watch: {},
   mounted() {
     this.getTableData();
     this.timer();
@@ -237,37 +309,19 @@ export default {
       let page = this.page;
       let start = length * (page - 1);
       let end = length * page;
-      return show.slice(start, end)
-    },
+      return show.slice(start, end);
+    }
   },
   methods: {
     timer() {
       //获取当日时间的前几天日期
-      const date = new Date()
-      date.setDate(date.getDate()-30)
-      const year = date.getFullYear()
-      const month = date.getMonth() + 1
-      const day = date.getDate()
-      const now_time = (`${year}-${month}-${day}`)
-      this.log(now_time)
-      return now_time
-    },
-    getItem_gender(item){
-        this.log(item)
-    },
-    getItem_isc(item){
-      this.log(item)
-    },
-    showDialog(bool) {
-      this.showDialog2 = bool;
-      this.showDialog1 = bool;
-    },
-    clickHeader(column, event) {
-      setTimeout(() => {
-        this.$refs.multipleTable.clearSort();
-        //this.$refs.multipleTable.doLayout();
-        this.Sort('ascending', 'h_create_id');
-      }, 100)
+      const date = new Date();
+      date.setDate(date.getDate() - 30);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const now_time = `${year}-${month}-${day}`;
+      return now_time;
     },
     SortChange(column, prop, order) {
       this.Sort(column.order, column.prop);
@@ -279,47 +333,53 @@ export default {
       let data = this.tableData.dataAll;
       setTimeout(() => {
         switch (true) {
-          case (order === 'descending' && object === 'h_create_id'):
+          case order === "descending" && object === "h_create_id":
             data = data.sort(id_desc_sort);
             break;
-          case (order === 'ascending' && object === 'h_create_id'):
+          case order === "ascending" && object === "h_create_id":
             data = data.sort(id_asc_sort);
             break;
-          case (order === 'descending' && object === 'createdate'):
+          case order === "descending" && object === "createdate":
             data = data.sort(date_desc_sort);
             break;
-          case (order === 'ascending' && object === 'createdate'):
+          case order === "ascending" && object === "createdate":
             data = data.sort(id_asc_sort);
             break;
-          case (order === 'ascending' && object === 'nickname'):
+          case order === "ascending" && object === "nickname":
             data = data.sort(nickname_asc_sort);
             break;
-          case (order === 'descending' && object === 'nickname'):
+          case order === "descending" && object === "nickname":
             data = data.sort(nickname_desc_sort);
             break;
-          case (order === 'ascending' && object === 'realname'):
+          case order === "ascending" && object === "realname":
             data = data.sort(realname_asc_sort);
             break;
-          case (order === 'descending' && object === 'realname'):
+          case order === "descending" && object === "realname":
             data = data.sort(realname_desc_sort);
             break;
-          case (order === 'ascending' && object === 'gender'):
+          case order === "ascending" && object === "gender":
             data = data.sort(gender_asc_sort);
             break;
-          case (order === 'descending' && object === 'gender'):
+          case order === "descending" && object === "gender":
             data = data.sort(gender_desc_sort);
             break;
-          case (order === 'ascending' && object === 'iscertification'):
+          case order === "ascending" && object === "iscertification":
             data = data.sort(isc_asc_sort);
             break;
-          case (order === 'descending' && object === 'iscertification'):
+          case order === "descending" && object === "iscertification":
             data = data.sort(isc_desc_sort);
             break;
-          case (order === 'ascending' && object === 'account'):
+          case order === "ascending" && object === "account":
             data = data.sort(isc_asc_sort);
             break;
-          case (order === 'descending' && object === 'account'):
+          case order === "descending" && object === "account":
             data = data.sort(isc_desc_sort);
+            break;
+          case order === "ascending" && object === "focus":
+            data = data.sort(focus_asc_sort);
+            break;
+          case order === "descending" && object === "focus":
+            data = data.sort(focus_desc_sort);
             break;
           default:
             data = data.sort(id_asc_sort);
@@ -329,33 +389,32 @@ export default {
         this.loading = false;
       }, 100);
     },
-    handleSelect(item) {
-      //选中选项后处理
-      console.log(item);
-      this.handleSearch();
-    },
     querySearchAsync(queryString, callback) {
-      var list = [{
-        'value': this.search.searchValue
-      }];
+      var list = [
+        {
+          value: this.search.searchValue
+        }
+      ];
       callback(list);
       if (this.getInputState === false) {
-        this.$post('/list/searchLoad', {
-          option: this.search.defaultOption.value,
-          value: this.search.searchValue
-        }).then(response => {
-          //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-          // for (let i of response.data) {
-          //   i.value = i.account; //将想要展示的数据作为value
-          // }
-          list = response.data;
-          list.unshift({
-            'value': this.search.searchValue
+        this.$post("/list/searchLoad", {
+            option: this.search.defaultOption.value,
+            value: this.search.searchValue
           })
-          callback(list);
-        }).catch((error) => {
-          this.log(error);
-        });
+          .then(response => {
+            //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+            // for (let i of response.data) {
+            //   i.value = i.account; //将想要展示的数据作为value
+            // }
+            list = response.data;
+            list.unshift({
+              value: this.search.searchValue
+            });
+            callback(list);
+          })
+          .catch(error => {
+            this.log(error);
+          });
       }
     },
     reGetData(text) {
@@ -373,7 +432,7 @@ export default {
       this.tableData.paginationShow = false;
       this.tableData.dataAll = [];
       this.timeout = setTimeout(() => {
-        this.$post('/list/searchOption', {
+        this.$post("/list/searchOption", {
           option: this.search.defaultOption.value,
           value: this.search.searchValue
         }).then(res => {
@@ -385,27 +444,19 @@ export default {
         this.loading = false;
       }, 800);
     },
-    handleOption(command) {
-      //更改显示的搜索选项
-      this.search.defaultOption.value = command;
-      if (this.search.searchValue.length > 0) {
-        this.handleSearch();
-      }
-    },
-    handleInputState(bool) {
-      //compositionstart,compositionend事件触发,获取汉字输入状态
-      this.getInputState = bool
-      console.log(this.getInputState)
-    },
     getTableData() {
       //载入所有数据
       this.tableData.paginationShow = false;
       this.loading = true;
       this.tableData.dataAll = [];
       this.timeout = setTimeout(() => {
-        this.$post('/list').then(res => {
+        this.$post("/list").then(res => {
           let resData = res.data;
           this.tableData.dataAll = resData;
+          this.tableData.pageData = this.tableData.dataAll.slice(
+            0,
+            this.tableData.pageLength
+          );
           this.tableData.tableDataLength = resData.length;
           this.tableData.paginationShow = true;
           this.loading = false;
@@ -421,7 +472,27 @@ export default {
         this.tableData.pageLength = val;
         this.tableData.paginationShow = true;
         this.loading = false;
-      }, 100)
+      }, 100);
+    },
+    clickHeader(column, event) {
+      //点击表头触发
+      setTimeout(() => {
+        this.$refs.multipleTable.clearSort();
+        //this.$refs.multipleTable.doLayout();
+        this.Sort("ascending", "h_create_id");
+      }, 100);
+    },
+    handleOption(command) {
+      //更改显示的搜索选项
+      this.search.defaultOption.value = command;
+      if (this.search.searchValue.length > 0) {
+        this.handleSearch();
+      }
+    },
+    handleInputState(bool) {
+      //compositionstart,compositionend事件触发,获取汉字输入状态
+      this.getInputState = bool;
+      console.log(this.getInputState);
     },
     handleCurrentChange(val) {
       //切换页数
@@ -429,18 +500,45 @@ export default {
       setTimeout(() => {
         this.page = val;
         this.loading = false;
-      }, 100)
+      }, 100);
+    },
+    getForm_Focus(value) {
+      this.log(value)
+      if (value === null) {
+        //this.focusSelect = false;
+        this.focusCustom = true;
+      } else {
+        this.focusCustom = false;
+      }
+    },
+    getItem_gender(item) {
+      //选择性别
+      this.log(item);
+    },
+    getItem_isc(item) {
+      //选择是否实名
+      this.log(item);
+    },
+    showDialog(bool) {
+      //显示Dialog
+      this.showDialog2 = bool;
+      this.showDialog1 = bool;
+    },
+    handleSelect(item) {
+      //选中选项后处理
+      console.log(item);
+      this.handleSearch();
     },
     log(index) {
-      console.log(index)
+      console.log(index);
     },
     iscertification(row, column) {
       //0,1的转换
-      return row.iscertification === 1 ? '已实名' : '未实名';
+      return row.iscertification === 1 ? "已实名" : "未实名";
     },
     handleEdit(index, row) {
       //编辑按钮
-      console.log(index, row)
+      console.log(index, row);
     },
     toggleSelection(rows) {
       if (rows) {
@@ -450,14 +548,19 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection();
       }
-    },
+    }
   }
-}
+};
 </script>
+
 <style scoped>
 .home {
   height: 100%;
   padding-top: 50px;
+}
+
+.filterForm {
+  height: 300px;
 }
 
 .unselect {
@@ -506,7 +609,7 @@ export default {
 }
 
 .self_dropdown:hover {
-  border: 1px #409EFF solid;
+  border: 1px #409eff solid;
 }
 
 .self_dropdown_icon {
@@ -528,9 +631,12 @@ export default {
   height: 30px;
   width: 100%;
 }
-.pointer{
-  cursor:pointer;/*鼠标变为手形*/
+
+.pointer {
+  cursor: pointer;
+  /*鼠标变为手形*/
 }
+
 .block {
   padding: 10px;
 }

@@ -52,6 +52,24 @@ export function date_desc_sort(a, b) {
     return 0
   }
 }
+export function focus_desc_sort(a, b){
+  if (a.focus > b.focus) {
+    return -1
+} else if (a.focus < b.focus) {
+    return 1
+  } else {
+    return 0
+  }
+}
+export function focus_asc_sort(a, b) {
+  if (a.focus < b.focus) {
+    return -1
+  } else if (a.focus > b.focus) {
+    return 1
+  } else {
+    return 0
+  }
+}
 export function gender_asc_sort(a, b) {
   return a.gender.localeCompare(b.gender, "zh");
 }
