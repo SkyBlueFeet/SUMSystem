@@ -60,46 +60,46 @@
       </el-col>
     </el-col>
   </el-col>
-  <el-dialog :visible.sync="Dialog" width="35%" :lock-scroll="false" title="自定义筛选" :show-close="false" :close-on-click-modal="false">
-    <el-form ref="form" :model="form" label-width="90px" class="filterForm">
+  <el-dialog :visible.sync="Dialog" width="35%" :lock-scroll="false" :show-close="true" :close-on-click-modal="false">
+    <span slot="title"><i class="iconfont icon-shaixuan1"></i> 自定义筛选</span>
+    <el-form :model="focusForm" status-icon :rules="rules2" ref="focusForm" label-width="90px" class="demo-ruleForm" inline>
       <el-form-item label="是否实名">
-        <el-select size="mini" v-model="form.isc.value" @change="getItem_isc">
+        <el-select size="mini" v-model="form.isc" @change="getItem_isc">
           <el-option v-for="item in iscOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="性别">
-        <el-select size="mini" v-model="form.gender.value" @change="getItem_gender">
+        <el-select size="mini" v-model="form.gender" @change="getItem_gender">
           <el-option v-for="item in genderOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="注册时间段" class="pointer">
-        <el-date-picker size="mini" value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日" @change="log(DateScope)" :editable="false" v-model="DateScope" :default-value="form.defaultDate" type="daterange" align="right" range-separator="-"
+        <el-date-picker size="mini" value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日" @change="log(form.DateScope)" :editable="false" v-model="form.DateScope" :default-value="form.defaultDate" type="daterange" align="right" range-separator="-"
             start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
         </el-date-picker>
       </el-form-item>
       <transition name="el-zoom-in-top">
         <el-form-item v-show="focusSelect" label="关注数">
-          <el-select size="mini" @change="getForm_Focus" v-model="form.focus.value">
+          <el-select size="mini" @change="getForm_Focus" v-model="form.focus">
+            <el-option :label="focusOptions_b.label" :value="focusOptions_b.value"></el-option>
             <el-option :label="focusOptions_t.label" :value="focusOptions_t.value"></el-option>
             <el-option v-for="item in focusOptions" :label="item.label" :value="item.value" :key="item.start">
               <span style="font-size: 13px;text-align:center">{{ item.start }}-{{item.end}}</span>
             </el-option>
-            <el-option :label="focusOptions_b.label" :value="focusOptions_b.value"></el-option>
             <el-option :label="focusOptions_c.label" :value="focusOptions_c.value"></el-option>
           </el-select>
         </el-form-item>
       </transition>
-      <transition name="el-zoom-in-top">
-        <el-form-item v-show="focusCustom">
-          <el-input size="mini" v-model="form.name" style="width:160px"></el-input>
-          <span>-</span>
-          <el-input size="mini" v-model="form.name" style="width:160px"></el-input>
-        </el-form-item>
-      </transition>
+      <el-form-item :required="focusCustom" label=" " label-width="90px" prop="startFocus" v-show="focusCustom">
+        <el-input size="mini" style="width:120px" v-model.number="focusForm.startFocus" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item :required="focusCustom" label=" " label-width="0px" prop="endFocus" v-show="focusCustom">
+        <el-input size="mini" style="width:120px" v-model.number="focusForm.endFocus" autocomplete="off"></el-input>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="Dialog = false">取 消</el-button>
-      <el-button type="primary" @click="Dialog = false">确 定</el-button>
+      <el-button type="primary" @click="handleForm">筛 选</el-button>
     </div>
   </el-dialog>
 </el-row>
@@ -124,9 +124,78 @@ import {
 } from "@/utils/table";
 export default {
   data() {
+    var checkNum = /^[0-9]*$/;
+    var checkAge = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('年龄不能为空'));
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('请输入数字值'));
+        } else {
+          if (value < 18) {
+            callback(new Error('必须年满18岁'));
+          } else {
+            callback();
+          }
+        }
+      }, 1000);
+    };
+    var checkStartFocus = (rule, value, callback) => {
+      if (this.focusCustom) {
+        if (value === '') {
+          callback('必填!');
+        } else if (!checkNum.test(value)) {
+          callback(new Error('请输入正确的数字'));
+          this.log(checkNum.test(value));
+        } else {
+          if (this.focusForm.endFocus !== '') {
+            this.$refs.focusForm.validateField('endFocus');
+          }
+          callback();
+        }
+      } else {
+        this.$refs.focusForm.clearValidate('startFocus');
+      }
+    };
+    var checkEndFocus = (rule, value, callback) => {
+      if (this.focusCustom) {
+        if (value === '') {
+          callback('必填!');
+        } else if (!checkNum.test(value)) {
+          callback(new Error('请输入正确的数字'));
+          this.log(checkNum.test(value));
+        } else if (value < this.focusForm.startFocus) {
+          callback(new Error('末值必须大于初值!'));
+        } else {
+          callback();
+        }
+      } else {
+        this.$refs.focusForm.clearValidate('endFocus');
+      }
+    };
     return {
+      focusForm: {
+        startFocus: '',
+        endFocus: '',
+        age: ''
+      },
       focusSelect: true,
       focusCustom: false,
+      rules2: {
+        startFocus: [{
+          validator: checkStartFocus,
+          trigger: 'blur'
+          }],
+        endFocus: [{
+          validator: checkEndFocus,
+          trigger: 'blur'
+          }],
+        age: [{
+          validator: checkAge,
+          trigger: 'blur'
+          }]
+      },
       pickerOptions2: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -161,25 +230,17 @@ export default {
           }
         ]
       },
-      DateScope: "",
       defaultIsc: "null",
       Dialog: false,
       form: {
         name: "",
-        isc: {
-          value: null,
-          label: "不限"
-        },
-        focus: {
-          value: 0
-        },
-        startDate: "",
-        endDate: "",
+        DateScope: null,
+        isc: null,
+        focus: null,
+        startFocus: '',
+        endFocus: '',
         defaultDate: this.timer(),
-        gender: {
-          label: "不限",
-          value: null
-        }
+        gender: null
       },
       iscOptions: [
         {
@@ -242,11 +303,11 @@ export default {
       },
       focusOptions_b: {
         label: "不限",
-        value: false
+        value: null
       },
       focusOptions_c: {
         label: "自定义",
-        value: null
+        value: false
       },
       getInputState: false,
       loading: false,
@@ -313,6 +374,44 @@ export default {
     }
   },
   methods: {
+    handleForm() {
+      if (this.focusCustom) {
+        this.submitForm('focusForm');
+      } else {
+        this.getFormToQuery();
+      }
+    },
+    getFormToQuery() {
+      setTimeout(() => {
+        this.$post("/list", {
+          isc: this.form.isc,
+          gender: this.form.gender,
+          data: this.form.DateScope,
+          focus: this.focusCustom ? [this.focusForm.startFocus, this.focusForm.endFocus] : this.form.focus
+        }).then(res => {
+          let resData = res.data;
+          this.tableData.dataAll = resData;
+          this.tableData.pageData = this.tableData.dataAll.slice(
+            0,
+            this.tableData.pageLength
+          );
+          this.tableData.tableDataLength = resData.length;
+          this.tableData.paginationShow = true;
+          this.loading = false;
+        });
+      }, 500);
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$message('正在查询,请稍后!');
+          this.getFormToQuery();
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
     timer() {
       //获取当日时间的前几天日期
       const date = new Date();
@@ -444,6 +543,14 @@ export default {
         this.loading = false;
       }, 800);
     },
+    filter() {
+      this.form.DateScope === null ?
+        this.log(`DateScope:${this.form.DateScope}`) : this.log(`DateScope:(start:${this.form.DateScope[0]},end:${this.form.DateScope[1]})`);
+      this.form.focus === false ?
+        this.log(`focus:(start:${this.form.startFocus},end:${this.form.endFocus})`) :
+        this.log(`focus:${this.form.focus}`)
+      this.log(`gender:${this.form.gender},isc:${this.form.isc}`)
+    },
     getTableData() {
       //载入所有数据
       this.tableData.paginationShow = false;
@@ -504,7 +611,7 @@ export default {
     },
     getForm_Focus(value) {
       this.log(value)
-      if (value === null) {
+      if (value === false) {
         //this.focusSelect = false;
         this.focusCustom = true;
       } else {
@@ -513,7 +620,7 @@ export default {
     },
     getItem_gender(item) {
       //选择性别
-      this.log(item);
+      this.form.gender = item
     },
     getItem_isc(item) {
       //选择是否实名
@@ -560,7 +667,7 @@ export default {
 }
 
 .filterForm {
-  height: 300px;
+  /* height: 300px; */
 }
 
 .unselect {
