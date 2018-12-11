@@ -18,7 +18,14 @@ var jsonWrite = function(res, ret) {
         res.json(ret)
     }
 }
-
+var convertSql = function(focus, addsql) {
+    if (focus === 5) {
+        sql = $sql.queryConditions[focus] + addsql
+    } else {
+        sql = $sql.queryConditions[focus] + ' AND ' + addsql
+    }
+    return sql
+}
 module.exports = {
     queryAll: function(req, res, next) {
         // 查询所有用户
@@ -30,8 +37,8 @@ module.exports = {
                     if (err) {
                         errLog(err)
                     } else {
-                        jsonWrite(res, result) // 以json形式，把操作结果返回给前台页面
-                        connection.release() // 释放连接
+                        jsonWrite(res, result)
+                        connection.release()
                     }
                 })
             }
@@ -49,8 +56,8 @@ module.exports = {
                     if (err) {
                         errLog(err)
                     } else {
-                        jsonWrite(res, result) // 以json形式，把操作结果返回给前台页面
-                        connection.release() // 释放连接
+                        jsonWrite(res, result)
+                        connection.release()
                     }
                 })
             }
@@ -68,8 +75,8 @@ module.exports = {
                     if (err) {
                         errLog(err)
                     } else {
-                        jsonWrite(res, result) // 以json形式，把操作结果返回给前台页面
-                        connection.release() // 释放连接
+                        jsonWrite(res, result)
+                        connection.release()
                     }
                 })
             }
@@ -87,27 +94,215 @@ module.exports = {
                     if (err) {
                         errLog(err)
                     } else {
-                        jsonWrite(res, result) // 以json形式，把操作结果返回给前台页面
-                        connection.release() // 释放连接
+                        jsonWrite(res, result)
+                        connection.release()
                     }
                 })
             }
         })
     },
-    queryLength: function(req, res, next) {
-        // 查询所有用户
+    queryConditions: function(req, res, next) {
+        // 搜索选项
         pool.getConnection(function(err, connection) {
             if (err) {
                 errLog(err)
             } else {
-                connection.query($sql.queryLength, (err, result) => {
-                    if (err) {
-                        errLog(err)
+                var data = req.body;
+                console.log(data);
+                if (data.focusCustom === false) {
+                    if (data.gender === null && data.date === null && data.isc === null) {
+                        $sql.queryConditions[5] = 'SELECT * FROM tableData'
+                        connection.query($sql.queryConditions[data.focus], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date === null && data.isc === null) {
+                        sql = convertSql(data.focus, ' gender=?');
+                        console.log(sql)
+                        connection.query(sql, [data.gender], (err, result) => {
+                            if (err) {
+                                errLog(err, sql);
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date !== null && data.isc === null) {
+                        sql = convertSql(data.focus, ' createdate>=? AND createdate<=?');
+                        connection.query(sql, [data.date[0], data.date[1]], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date === null && data.isc !== null) {
+                        sql = convertSql(data.focus, ' iscertification=?');
+                        connection.query(sql, [data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date === null && data.isc !== null) {
+                        sql = convertSql(data.focus, ' gender=? AND iscertification=?');
+                        connection.query(sql, [data.gender, data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date !== null && data.isc === null) {
+                        sql = convertSql(data.focus, ' gender=? AND createdate>=? AND createdate<=?');
+                        connection.query(sql, [data.gender, data.date[0], data.date[1]], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date !== null && data.isc !== null) {
+                        sql = convertSql(data.focus, ' createdate>=? AND createdate<=? AND iscertification=?');
+                        connection.query(sql, [data.date[0], data.date[1], data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date !== null && data.isc !== null) {
+                        sql = convertSql(data.focus, ' createdate>=? AND createdate<=? AND iscertification=?');
+                        connection.query(sql, [data.date[0], data.date[1], data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date !== null && data.isc !== null) {
+                        sql = convertSql(data.focus, ' createdate>=? AND createdate<=? AND iscertification=? AND gender=?');
+                        connection.query(sql, [data.date[0], data.date[1], data.isc, data.gender], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
                     } else {
-                        jsonWrite(res, result) // 以json形式，把操作结果返回给前台页面
-                        connection.release() // 释放连接
+                        const msg = '没有该查询';
+                        jsonWrite(res, msg)
+                        connection.release()
                     }
-                })
+                } else if (data.focusCustom) {
+                    if (data.gender === null && data.date === null && data.isc === null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=?'
+                        connection.query(sql, [data.focus[0], data.focus[1]], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date === null && data.isc === null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND gender=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.gender], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date !== null && data.isc === null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND createdate>=? AND createdate<=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.date[0], data.date[1]], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date === null && data.isc !== null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND iscertification=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date === null && data.isc !== null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND gender=? AND iscertification=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.gender, data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date !== null && data.isc === null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND gender=? AND createdate>=? AND createdate<=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.gender, data.date[0], data.date[1]], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date !== null && data.isc !== null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND createdate>=? AND createdate<=? AND iscertification=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.date[0], data.date[1], data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender === null && data.date !== null && data.isc !== null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND createdate>=? AND createdate<=? AND iscertification=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.date[0], data.date[1], data.isc], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else if (data.gender !== null && data.date !== null && data.isc !== null) {
+                        sql = 'SELECT * FROM tableData WHERE focus>=? AND focus<=? AND createdate>=? AND createdate<=? AND iscertification=? AND gender=?'
+                        connection.query(sql, [data.focus[0], data.focus[1], data.date[0], data.date[1], data.isc, data.gender], (err, result) => {
+                            if (err) {
+                                errLog(err)
+                            } else {
+                                jsonWrite(res, result)
+                                connection.release()
+                            }
+                        })
+                    } else {
+                        const msg = '没有该查询';
+                        jsonWrite(res, msg)
+                        connection.release()
+                    }
+                }
             }
         })
     }

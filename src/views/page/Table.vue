@@ -1,108 +1,296 @@
 <template>
-<el-row class="home">
-  <el-col :offset="4" :span="20" class="breadcrumb">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>Page</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{name:'Table'}">Table</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-col>
-  <el-col :offset="4" :span="20" class="tool_menu">
-    <el-col :span="4">
-      <el-pagination @size-change="handleSizeChange" :current-page.sync="page" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="total,sizes" :background="true" :total="tableData.tableDataLength"></el-pagination>
+  <el-row class="home">
+    <el-col :offset="4" :span="20" class="breadcrumb">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>Page</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{name:'Table'}">Table</el-breadcrumb-item>
+      </el-breadcrumb>
     </el-col>
-    <el-col :span="2">
-      <el-button type="primary" @click.native="log(page)" size="mini">
-        <i class="iconfont icon-add"></i> 增加用户
-      </el-button>
-    </el-col>
-    <el-col :offset="9" :span="3" class="filter">
-      <el-button type="info" @click="Dialog=true" size="mini">
-        <i class="iconfont icon-shaixuan1"></i> 自定义筛选
-      </el-button>
-    </el-col>
-    <el-col :span="6">
-      <el-autocomplete placeholder="请输入内容" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false" :debounce="200" size="small" select-when-unmatched @input.native="reGetData(search.searchValue)" @select="handleSelect"
-          @compositionstart.native="handleInputState(true)" @compositionend.native="handleInputState(false)" v-model="search.searchValue" class="input-with-select">
-        <el-select @change="handleOption" slot="prepend" v-model="search.defaultOption.value" placeholder="请选择" style="width:100px;">
-          <el-option :label="index.label" :value="index.value" v-for="(index,item) in search.searchOptions" :key="item">{{index.label}}</el-option>
-        </el-select>
-      </el-autocomplete>
-    </el-col>
-  </el-col>
-  <el-col :offset="4" :span="20">
-    <transition name="el-zoom-in-top">
-      <el-table height="540" v-loading="loading" :empty-text="emptyText" element-loading-text="玩命加载中..." @sort-change="SortChange" ref="multipleTable" :data="data" tooltip-effect="dark" @header-click="clickHeader" :highlight-current-row="true" style="width: 100%"
-          border>
-        <el-table-column sortable="custom" column-key="h_create_id" :sort-orders="sortorders" prop="h_create_id" label="ID" align="center" :resizable="false" width="120"></el-table-column>
-        <el-table-column sortable="custom" column-key="createdate" :sort-orders="sortorders" prop="createdate" label="注册日期" align="center" width="120"></el-table-column>
-        <el-table-column prop="nickname" column-key="nickname" sortable="custom" label="头条号" align="center" width="120"></el-table-column>
-        <el-table-column prop="realname" column-key="realname" sortable="custom" label="姓名" width="80" align="center" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="gender" column-key="gender" sortable="custom" label="性别" align="center" width="80"></el-table-column>
-        <el-table-column prop="iscertification" column-key="iscertification" sortable="custom" label="是否实名" width="120" align="center" :formatter="iscertification"></el-table-column>
-        <el-table-column prop="account" column-key="account" label="账号" align="center" width="150" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="compony" column-key="compony" label="单位" align="center" width="120" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="focus" sortable="custom" column-key="focus" label="关注" align="center" width="120"></el-table-column>
-        <el-table-column width="10">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
-        </el-table-column>
-        <el-table-column>
-          <template slot-scope="scope" class="editBtn">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </transition>
-    <el-col :span="24">
-      <el-col :span="11" :offset="13" class="block">
-        <el-pagination v-if="tableData.paginationShow" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="tableData.item" :page-size="tableData.pageLength" debounce="100" layout="sizes, prev, pager, next" :background="true"
-            :total="tableData.tableDataLength"></el-pagination>
+    <el-col :offset="4" :span="20" class="tool_menu">
+      <el-col :span="4">
+        <el-pagination
+          @size-change="handleSizeChange"
+          :current-page.sync="page"
+          @current-change="handleCurrentChange"
+          :page-sizes="tableData.item"
+          :page-size="tableData.pageLength"
+          debounce="100"
+          layout="total,sizes"
+          :background="true"
+          :total="tableData.tableDataLength"
+        ></el-pagination>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="primary" @click.native="log(page)" size="mini">
+          <i class="iconfont icon-add"></i> 增加用户
+        </el-button>
+      </el-col>
+      <el-col :offset="9" :span="3" class="filter">
+        <el-button type="info" @click="Dialog=true" size="mini">
+          <i class="iconfont icon-shaixuan1"></i> 自定义筛选
+        </el-button>
+      </el-col>
+      <el-col :span="6">
+        <el-autocomplete
+          placeholder="请输入内容"
+          :fetch-suggestions="querySearchAsync"
+          :trigger-on-focus="false"
+          :debounce="200"
+          size="small"
+          select-when-unmatched
+          @input.native="reGetData(search.searchValue)"
+          @select="handleSelect"
+          @compositionstart.native="handleInputState(true)"
+          @compositionend.native="handleInputState(false)"
+          v-model="search.searchValue"
+          class="input-with-select"
+        >
+          <el-select
+            @change="handleOption"
+            slot="prepend"
+            v-model="search.defaultOption.value"
+            placeholder="请选择"
+            style="width:100px;"
+          >
+            <el-option
+              :label="index.label"
+              :value="index.value"
+              v-for="(index,item) in search.searchOptions"
+              :key="item"
+            >{{index.label}}</el-option>
+          </el-select>
+        </el-autocomplete>
       </el-col>
     </el-col>
-  </el-col>
-  <el-dialog :visible.sync="Dialog" width="35%" :lock-scroll="false" :show-close="true" :close-on-click-modal="false">
-    <span slot="title"><i class="iconfont icon-shaixuan1"></i> 自定义筛选</span>
-    <el-form :model="focusForm" status-icon :rules="rules2" ref="focusForm" label-width="90px" class="demo-ruleForm" inline>
-      <el-form-item label="是否实名">
-        <el-select size="mini" v-model="form.isc" @change="getItem_isc">
-          <el-option v-for="item in iscOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="性别">
-        <el-select size="mini" v-model="form.gender" @change="getItem_gender">
-          <el-option v-for="item in genderOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="注册时间段" class="pointer">
-        <el-date-picker size="mini" value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日" @change="log(form.DateScope)" :editable="false" v-model="form.DateScope" :default-value="form.defaultDate" type="daterange" align="right" range-separator="-"
-            start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
-        </el-date-picker>
-      </el-form-item>
+    <el-col :offset="4" :span="20">
       <transition name="el-zoom-in-top">
-        <el-form-item v-show="focusSelect" label="关注数">
-          <el-select size="mini" @change="getForm_Focus" v-model="form.focus">
-            <el-option :label="focusOptions_b.label" :value="focusOptions_b.value"></el-option>
-            <el-option :label="focusOptions_t.label" :value="focusOptions_t.value"></el-option>
-            <el-option v-for="item in focusOptions" :label="item.label" :value="item.value" :key="item.start">
-              <span style="font-size: 13px;text-align:center">{{ item.start }}-{{item.end}}</span>
-            </el-option>
-            <el-option :label="focusOptions_c.label" :value="focusOptions_c.value"></el-option>
+        <el-table
+          height="540"
+          v-loading="loading"
+          :empty-text="emptyText"
+          element-loading-text="玩命加载中..."
+          @sort-change="SortChange"
+          ref="multipleTable"
+          :data="data"
+          tooltip-effect="dark"
+          @header-click="clickHeader"
+          :highlight-current-row="true"
+          style="width: 100%"
+          border
+        >
+          <el-table-column
+            sortable="custom"
+            column-key="h_create_id"
+            :sort-orders="sortorders"
+            prop="h_create_id"
+            label="ID"
+            align="center"
+            :resizable="false"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            sortable="custom"
+            column-key="createdate"
+            :sort-orders="sortorders"
+            prop="createdate"
+            label="注册日期"
+            align="center"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            prop="nickname"
+            column-key="nickname"
+            sortable="custom"
+            label="头条号"
+            align="center"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            prop="realname"
+            column-key="realname"
+            sortable="custom"
+            label="姓名"
+            width="80"
+            align="center"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column
+            prop="gender"
+            column-key="gender"
+            sortable="custom"
+            label="性别"
+            align="center"
+            width="80"
+          ></el-table-column>
+          <el-table-column
+            prop="iscertification"
+            column-key="iscertification"
+            sortable="custom"
+            label="是否实名"
+            width="120"
+            align="center"
+            :formatter="iscertification"
+          ></el-table-column>
+          <el-table-column
+            prop="account"
+            column-key="account"
+            label="账号"
+            align="center"
+            width="150"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column
+            prop="compony"
+            column-key="compony"
+            label="单位"
+            align="center"
+            width="120"
+            show-overflow-tooltip
+          ></el-table-column>
+          <el-table-column
+            prop="focus"
+            sortable="custom"
+            column-key="focus"
+            label="关注"
+            align="center"
+            width="120"
+          ></el-table-column>
+          <el-table-column width="10">
+            <template slot-scope="scope">{{ scope.row.date }}</template>
+          </el-table-column>
+          <el-table-column>
+            <template slot-scope="scope" class="editBtn">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </transition>
+      <el-col :span="24">
+        <el-col :span="11" :offset="13" class="block">
+          <el-pagination
+            v-if="tableData.paginationShow"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="tableData.item"
+            :page-size="tableData.pageLength"
+            debounce="100"
+            layout="sizes, prev, pager, next"
+            :background="true"
+            :total="tableData.tableDataLength"
+          ></el-pagination>
+        </el-col>
+      </el-col>
+    </el-col>
+    <el-dialog
+      :visible.sync="Dialog"
+      width="35%"
+      :lock-scroll="false"
+      :show-close="true"
+      :close-on-click-modal="false"
+    >
+      <span slot="title">
+        <i class="iconfont icon-shaixuan1"></i> 自定义筛选
+      </span>
+      <el-form
+        :model="focusForm"
+        status-icon
+        :rules="rules2"
+        ref="focusForm"
+        label-width="90px"
+        class="demo-ruleForm filterForm"
+        inline
+      >
+        <el-form-item label="是否实名">
+          <el-select size="mini" v-model="form.isc" @change="getItem_isc">
+            <el-option
+              v-for="item in iscOptions"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            ></el-option>
           </el-select>
         </el-form-item>
-      </transition>
-      <el-form-item :required="focusCustom" label=" " label-width="90px" prop="startFocus" v-show="focusCustom">
-        <el-input size="mini" style="width:120px" v-model.number="focusForm.startFocus" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item :required="focusCustom" label=" " label-width="0px" prop="endFocus" v-show="focusCustom">
-        <el-input size="mini" style="width:120px" v-model.number="focusForm.endFocus" autocomplete="off"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="Dialog = false">取 消</el-button>
-      <el-button type="primary" @click="handleForm">筛 选</el-button>
-    </div>
-  </el-dialog>
-</el-row>
+        <el-form-item label="性别">
+          <el-select size="mini" v-model="form.gender" @change="getItem_gender">
+            <el-option
+              v-for="item in genderOptions"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="注册时间段" class="pointer">
+          <el-date-picker
+            size="mini"
+            value-format="yyyy-MM-dd"
+            format="yyyy 年 MM 月 dd 日"
+            @change="log(form.DateScope)"
+            :editable="false"
+            v-model="form.DateScope"
+            :default-value="form.defaultDate"
+            type="daterange"
+            align="right"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions2"
+          ></el-date-picker>
+        </el-form-item>
+        <transition name="el-zoom-in-top">
+          <el-form-item v-show="focusSelect" label="关注数">
+            <el-select size="mini" @change="getForm_Focus" v-model="form.focus">
+              <el-option :label="focusOptions_b.label" :value="focusOptions_b.value"></el-option>
+              <el-option :label="focusOptions_t.label" :value="focusOptions_t.value"></el-option>
+              <el-option
+                v-for="item in focusOptions"
+                :label="item.label"
+                :value="item.value"
+                :key="item.start"
+              >
+                <span style="font-size: 13px;text-align:center">{{ item.start }}-{{item.end}}</span>
+              </el-option>
+              <el-option :label="focusOptions_a.label" :value="focusOptions_a.value"></el-option>
+              <el-option :label="focusOptions_c.label" :value="focusOptions_c.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </transition>
+        <el-form-item
+          :required="focusCustom"
+          label=" "
+          label-width="90px"
+          prop="startFocus"
+          v-show="focusCustom"
+        >
+          <el-input
+            size="mini"
+            style="width:120px"
+            v-model.number="focusForm.startFocus"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          :required="focusCustom"
+          label=" "
+          label-width="0px"
+          prop="endFocus"
+          v-show="focusCustom"
+        >
+          <el-input
+            size="mini"
+            style="width:120px"
+            v-model.number="focusForm.endFocus"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="Dialog = false">取 消</el-button>
+        <el-button type="primary" @click="handleForm">筛 选</el-button>
+      </div>
+    </el-dialog>
+  </el-row>
 </template>
 
 <script>
@@ -127,14 +315,14 @@ export default {
     var checkNum = /^[0-9]*$/;
     var checkAge = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('年龄不能为空'));
+        return callback(new Error("年龄不能为空"));
       }
       setTimeout(() => {
         if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字值'));
+          callback(new Error("请输入数字值"));
         } else {
           if (value < 18) {
-            callback(new Error('必须年满18岁'));
+            callback(new Error("必须年满18岁"));
           } else {
             callback();
           }
@@ -143,58 +331,64 @@ export default {
     };
     var checkStartFocus = (rule, value, callback) => {
       if (this.focusCustom) {
-        if (value === '') {
-          callback('必填!');
+        if (value === "") {
+          callback("必填!");
         } else if (!checkNum.test(value)) {
-          callback(new Error('请输入正确的数字'));
+          callback(new Error("请输入正确的数字"));
           this.log(checkNum.test(value));
         } else {
-          if (this.focusForm.endFocus !== '') {
-            this.$refs.focusForm.validateField('endFocus');
+          if (this.focusForm.endFocus !== "") {
+            this.$refs.focusForm.validateField("endFocus");
           }
           callback();
         }
       } else {
-        this.$refs.focusForm.clearValidate('startFocus');
+        this.$refs.focusForm.clearValidate("startFocus");
       }
     };
     var checkEndFocus = (rule, value, callback) => {
       if (this.focusCustom) {
-        if (value === '') {
-          callback('必填!');
+        if (value === "") {
+          callback("必填!");
         } else if (!checkNum.test(value)) {
-          callback(new Error('请输入正确的数字'));
+          callback(new Error("请输入正确的数字"));
           this.log(checkNum.test(value));
         } else if (value < this.focusForm.startFocus) {
-          callback(new Error('末值必须大于初值!'));
+          callback(new Error("末值必须大于初值!"));
         } else {
           callback();
         }
       } else {
-        this.$refs.focusForm.clearValidate('endFocus');
+        this.$refs.focusForm.clearValidate("endFocus");
       }
     };
     return {
       focusForm: {
-        startFocus: '',
-        endFocus: '',
-        age: ''
+        startFocus: "",
+        endFocus: "",
+        age: ""
       },
       focusSelect: true,
       focusCustom: false,
       rules2: {
-        startFocus: [{
-          validator: checkStartFocus,
-          trigger: 'blur'
-          }],
-        endFocus: [{
-          validator: checkEndFocus,
-          trigger: 'blur'
-          }],
-        age: [{
-          validator: checkAge,
-          trigger: 'blur'
-          }]
+        startFocus: [
+          {
+            validator: checkStartFocus,
+            trigger: "blur"
+          }
+        ],
+        endFocus: [
+          {
+            validator: checkEndFocus,
+            trigger: "blur"
+          }
+        ],
+        age: [
+          {
+            validator: checkAge,
+            trigger: "blur"
+          }
+        ]
       },
       pickerOptions2: {
         disabledDate(time) {
@@ -236,9 +430,9 @@ export default {
         name: "",
         DateScope: null,
         isc: null,
-        focus: null,
-        startFocus: '',
-        endFocus: '',
+        focus: 5,
+        startFocus: "",
+        endFocus: "",
         defaultDate: this.timer(),
         gender: null
       },
@@ -248,11 +442,11 @@ export default {
           label: "不限"
         },
         {
-          value: "1",
+          value: 1,
           label: "已实名"
         },
         {
-          value: "0",
+          value: 0,
           label: "未实名"
         }
       ],
@@ -296,14 +490,14 @@ export default {
           value: 3
         }
       ],
-      focusOptions_b: {
+      focusOptions_a: {
         label: "500000以上",
         start: 500001,
         value: 4
       },
       focusOptions_b: {
         label: "不限",
-        value: null
+        value: 5
       },
       focusOptions_c: {
         label: "自定义",
@@ -376,18 +570,22 @@ export default {
   methods: {
     handleForm() {
       if (this.focusCustom) {
-        this.submitForm('focusForm');
+        this.submitForm("focusForm");
       } else {
+        this.$message("正在查询,请稍后!");
         this.getFormToQuery();
       }
     },
     getFormToQuery() {
       setTimeout(() => {
-        this.$post("/list", {
+        this.$post("/list/queryConditions", {
           isc: this.form.isc,
           gender: this.form.gender,
-          data: this.form.DateScope,
-          focus: this.focusCustom ? [this.focusForm.startFocus, this.focusForm.endFocus] : this.form.focus
+          date: this.form.DateScope,
+          focusCustom: this.focusCustom,
+          focus: this.focusCustom
+            ? [this.focusForm.startFocus, this.focusForm.endFocus]
+            : this.form.focus
         }).then(res => {
           let resData = res.data;
           this.tableData.dataAll = resData;
@@ -402,12 +600,12 @@ export default {
       }, 500);
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message('正在查询,请稍后!');
+          this.$message("正在查询,请稍后!");
           this.getFormToQuery();
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
@@ -497,9 +695,9 @@ export default {
       callback(list);
       if (this.getInputState === false) {
         this.$post("/list/searchLoad", {
-            option: this.search.defaultOption.value,
-            value: this.search.searchValue
-          })
+          option: this.search.defaultOption.value,
+          value: this.search.searchValue
+        })
           .then(response => {
             //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
             // for (let i of response.data) {
@@ -544,12 +742,19 @@ export default {
       }, 800);
     },
     filter() {
-      this.form.DateScope === null ?
-        this.log(`DateScope:${this.form.DateScope}`) : this.log(`DateScope:(start:${this.form.DateScope[0]},end:${this.form.DateScope[1]})`);
-      this.form.focus === false ?
-        this.log(`focus:(start:${this.form.startFocus},end:${this.form.endFocus})`) :
-        this.log(`focus:${this.form.focus}`)
-      this.log(`gender:${this.form.gender},isc:${this.form.isc}`)
+      this.form.DateScope === null
+        ? this.log(`DateScope:${this.form.DateScope}`)
+        : this.log(
+            `DateScope:(start:${this.form.DateScope[0]},end:${
+              this.form.DateScope[1]
+            })`
+          );
+      this.form.focus === false
+        ? this.log(
+            `focus:(start:${this.form.startFocus},end:${this.form.endFocus})`
+          )
+        : this.log(`focus:${this.form.focus}`);
+      this.log(`gender:${this.form.gender},isc:${this.form.isc}`);
     },
     getTableData() {
       //载入所有数据
@@ -610,7 +815,7 @@ export default {
       }, 100);
     },
     getForm_Focus(value) {
-      this.log(value)
+      this.log(value);
       if (value === false) {
         //this.focusSelect = false;
         this.focusCustom = true;
@@ -620,7 +825,7 @@ export default {
     },
     getItem_gender(item) {
       //选择性别
-      this.form.gender = item
+      this.form.gender = item;
     },
     getItem_isc(item) {
       //选择是否实名
@@ -667,7 +872,7 @@ export default {
 }
 
 .filterForm {
-  /* height: 300px; */
+  height: 280px;
 }
 
 .unselect {

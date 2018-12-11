@@ -7,8 +7,8 @@ const bodyParser = require('body-parser')
 router.all('/', bodyParser.json(), (req, res, next) => {
     list.queryAll(req, res, next)
 })
-router.all('/limit', bodyParser.json(), (req, res, next) => {
-    list.queryLimit(req, res, next)
+router.all('/queryConditions', bodyParser.json(), (req, res, next) => {
+    list.queryConditions(req, res, next)
 })
 router.all('/count', bodyParser.json(), (req, res, next) => {
     list.queryLength(req, res, next)

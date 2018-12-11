@@ -21,6 +21,16 @@ var list = {
         "SELECT account AS value from tableData WHERE account LIKE ?",
         "SELECT compony AS value from tableData WHERE compony LIKE ?",
     ],
+    queryConditions: [
+        //其他三项全为null时
+        "SELECT * FROM tableData WHERE focus<=1000",
+        "SELECT * FROM tableData WHERE focus>1000 AND focus<=10000",
+        "SELECT * FROM tableData WHERE focus>10000 AND focus<=100000",
+        "SELECT * FROM tableData WHERE focus>100000 AND focus<=500000",
+        "SELECT * FROM tableData WHERE focus>500000",
+        "SELECT * FROM tableData WHERE ",
+        "SELECT * FROM tableData WHERE focus>=? AND focus<=?"
+    ]
 }
 
 module.exports = list
