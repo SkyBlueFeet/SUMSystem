@@ -25,8 +25,11 @@
           <i class="iconfont icon-add"></i> 增加用户
         </el-button>
       </el-col>
-      <el-col :offset="9" :span="3" class="filter">
-        <el-button type="info" @click="Dialog=true" size="mini">
+      <el-col :offset="8" :span="4" class="filter">
+        <el-button size="mini" @click.native="getTableData">
+          <i class="iconfont icon-shuaxin"></i>
+        </el-button>
+        <el-button type="info" @click.native="Dialog=true" size="mini">
           <i class="iconfont icon-shaixuan1"></i> 自定义筛选
         </el-button>
       </el-col>
@@ -65,10 +68,10 @@
     <el-col :offset="4" :span="20">
       <transition name="el-zoom-in-top">
         <el-table
-          height="540"
+          height="555"
           v-loading="loading"
           :empty-text="emptyText"
-          element-loading-text="玩命加载中..."
+          element-loading-text="加载中..."
           @sort-change="SortChange"
           ref="multipleTable"
           :data="data"
@@ -286,7 +289,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="Dialog = false">取 消</el-button>
+        <el-button @click="handleCancel">取 消</el-button>
         <el-button type="primary" @click="handleForm">筛 选</el-button>
       </div>
     </el-dialog>
@@ -568,11 +571,23 @@ export default {
     }
   },
   methods: {
+    handleCancel() {
+      //form清零
+      this.Dialog = false;
+      this.form.isc = null;
+      this.form.DateScope = null;
+      this.form.gender = null;
+      this.focusCustom = false;
+      this.focusForm.startFocus = "";
+      this.focusForm.endFocus = "";
+      this.form.focus = 5;
+    },
     handleForm() {
       if (this.focusCustom) {
         this.submitForm("focusForm");
       } else {
-        this.$message("正在查询,请稍后!");
+        this.Dialog = false;
+        this.loading = true;
         this.getFormToQuery();
       }
     },
@@ -602,7 +617,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message("正在查询,请稍后!");
+          this.Dialog = false;
+          this.loading = true;
           this.getFormToQuery();
         } else {
           console.log("error submit!!");

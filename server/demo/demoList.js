@@ -142,7 +142,7 @@ module.exports = {
                             }
                         })
                     } else if (data.gender === null && data.date === null && data.isc !== null) {
-                        sql = convertSql(data.focus, ' iscertification=?');
+                        sql = convertSql(data.focus, 'iscertification= ?');
                         connection.query(sql, [data.isc], (err, result) => {
                             if (err) {
                                 errLog(err)
