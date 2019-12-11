@@ -1,16 +1,16 @@
 'use strict';
 const path = require('path');
-const utils = require('./utils');
+const { resolve, assetsPath } = require('./utils');
 const config = require('../config');
 const vueLoaderConfig = require('./vue-loader.conf');
-
-function resolve(dir) {
-    return path.join(__dirname, '..', dir);
-}
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HappyPackPlugin = require('happypack');
+// const t = HappyPackPlugin.threadPool({ size: os.cpus().length });
 
 const createLintingRule = () => ({
     test: /\.(js|vue)$/,
-    loader: 'eslint-loader',
+    // loader: 'eslint-loader',
+    loader: 'happypack/loader?id=eslint',
     enforce: 'pre',
     include: [resolve('src'), resolve('test')],
     options: {
@@ -20,7 +20,7 @@ const createLintingRule = () => ({
 });
 
 module.exports = {
-    context: path.resolve(__dirname, '../'),
+    context: resolve(),
     entry: {
         app: './src/main.js'
     },
@@ -47,15 +47,20 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
+                loader: 'happypack/loader?id=babel',
                 include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
             },
+            // {
+            //     test: /\.js$/,
+            //     loader: 'babel-loader',
+            //     include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+            // },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('img/[name].[hash:7].[ext]')
+                    name: assetsPath('img/[name].[hash:7].[ext]')
                 }
             },
             {
@@ -63,7 +68,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('media/[name].[hash:7].[ext]')
+                    name: assetsPath('media/[name].[hash:7].[ext]')
                 }
             },
             {
@@ -71,11 +76,29 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 10000,
-                    name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+                    name: assetsPath('fonts/[name].[hash:7].[ext]')
                 }
             }
         ]
     },
+    plugins: [
+        new VueLoaderPlugin(),
+        new HappyPackPlugin({
+            id: 'babel',
+            loaders: [
+            {
+                loader: 'babel-loader'
+            }],
+            threadPool: happyThreadPool,
+        }),
+        new HappyPackPlugin({
+            id: 'eslint',
+            loaders: [
+            {
+                loader: 'eslint-loader'
+            }]
+        })
+    ],
     node: {
         // prevent webpack from injecting useless setImmediate polyfill because Vue
         // source contains it (although only uses it if it's native).

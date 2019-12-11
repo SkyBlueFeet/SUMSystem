@@ -10,40 +10,42 @@
 module.exports = {
     root: true,
     parserOptions: {
-        parser: "babel-eslint",
+        parser: 'babel-eslint',
         ecmaVersion: 6
     },
     env: {
         browser: true,
         es6: true,
         node: true,
-        commonjs: true,
+        commonjs: false,
         jquery: true
     },
     extends: [
         // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
         // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-        "plugin:vue/essential",
         // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-        "standard"
+        'standard',
+        'eslint:recommended'
     ],
     // required to lint *.vue files
-    plugins: ["vue", "html"], //
+    plugins: ['html'], //
     // add your custom rules here
     //it is base on https://github.com/vuejs/eslint-config-vue
     rules: {
-        "arrow-parens": 0,
+        'arrow-parens': 0,
         // allow async-await
-        "generator-star-spacing": 0,
+        'generator-star-spacing': 0,
         // allow debugger during development
-        "no-debugger": process.env.NODE_ENV === "production" ? 2 : 0,
-        semi: ["error", "always"],
-        "space-before-function-paren": 0,
-        quotes: [1, "single"],
-        "no-unused-vars": 0,
-        "dot-location": [0, "always"],
-        "newline-after-var": [0, "always"],
-        "indent": [1, 4],
-        "eol-last": ["error", "never"]
+        'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+        semi: ['error', 'always'],
+        'space-before-function-paren': 0,
+        quotes: [1, 'single'],
+        'no-unused-vars': 0,
+        'dot-location': [0, 'always'],
+        'newline-after-var': [0, 'always'],
+        'no-useless-catch': [0, 'always'],
+        'no-console': [0, 'always'],
+        'eol-last': ["error", "never"],
+        'indent': [1, 4]
     }
 };
