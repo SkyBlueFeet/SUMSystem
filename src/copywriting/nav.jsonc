@@ -1,0 +1,31 @@
+{
+    "backgroundColor": "",
+    "textColor": "",
+    "activeTextColor": "",
+    "defaultActive": "",
+    "menu": [
+    {
+        "index": "",
+        "title": "参考消息",
+        "icon": "el-icon-document",
+        "subMenu": []
+    },
+    {
+        "index": "sum",
+        "title": "学生时政",
+        "icon": "el-icon-s-opportunity",
+        "subMenu": []
+    },
+    {
+        "index": "equepment",
+        "title": "部门管理",
+        "icon": "el-icon-s-promotion",
+        "subMenu": []
+    },
+    {
+        "index": "now",
+        "title": "部门现况",
+        "icon": "el-icon-data-board",
+        "subMenu": []
+    }]
+}

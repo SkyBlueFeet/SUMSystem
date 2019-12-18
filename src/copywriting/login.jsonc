@@ -1,0 +1,39 @@
+{
+    "bgName": "login.jpg", // src/assets目录下
+    "defaultLoginType": "student",
+    "rules": {
+        "account": [
+        {
+            "required": true,
+            "message": "请输入学号",
+            "trigger": "blur"
+        },
+        {
+            "min": 5,
+            "max": 12,
+            "message": "应为教师工号或者学号",
+            "trigger": "blur"
+        }],
+        "password": [{
+            "required": true,
+            "message": "请输入密码",
+            "trigger": "blur"
+        },
+        {
+            "min": 8,
+            "max": 20,
+            "message": "密码长度在8-20位之间",
+            "trigger": "blur"
+        }]
+    },
+    "position": {
+        "form": {
+            "top": "5%",
+            "right": "5%"
+        },
+        "head": {
+            "top": "100px",
+            "left": "200px"
+        }
+    }
+}

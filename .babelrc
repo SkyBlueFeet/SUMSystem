@@ -20,9 +20,15 @@
         ]
     ],
     "plugins": [
-        "syntax-dynamic-import",
-        "@babel/plugin-proposal-class-properties",
         "@vue/babel-plugin-transform-vue-jsx",
-        "@babel/plugin-transform-runtime"
+        "@babel/plugin-transform-runtime",
+        "syntax-dynamic-import",
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+        ["@babel/plugin-proposal-class-properties", { "loose": true }],
+        ["component",
+        {
+            "libraryName": "element-ui",
+            "styleLibraryName": "theme-chalk"
+        }]
     ]
 }

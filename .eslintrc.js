@@ -46,6 +46,7 @@ module.exports = {
         'no-useless-catch': [0, 'always'],
         'no-console': [0, 'always'],
         'eol-last': ["error", "never"],
-        'indent': [1, 4]
+        'indent': [1, 4],
+        'prefer-const': [0, "any"]
     }
 };

@@ -1,26 +1,71 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" />
-    <router-view></router-view>
-    <router-view class="nav-menu" name="navMenu"></router-view>
+    <template v-if="$route.meta.type === 'admin'">
+      <admin-layout>
+        <router-view />
+      </admin-layout>
+    </template>
+    <template v-else-if="$route.meta.type === 'index'">
+      <index-layout>
+        <router-view />
+      </index-layout>
+    </template>
+    <template v-else>
+      <router-view />
+    </template>
   </div>
 </template>
 
 <script>
-export default {
-  name: "App"
-};
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Header, Container, Main, Aside, Footer } from "element-ui";
+import AdminLayout from "@/layout/admin";
+import IndexLayout from "@/layout/index";
+Vue.use(Container);
+Vue.use(Footer);
+Vue.use(Aside);
+Vue.use(Main);
+Vue.use(Header);
+
+@Component({
+  components: {
+    AdminLayout,
+    IndexLayout
+  }
+})
+export default class layout extends Vue {
+  mounted() {
+    console.log(this.$route.meta);
+    document.body.style.overflow = "auto";
+  }
+  headerStyle = {
+    height: "72px"
+  };
+  asideStyle = {
+    width: "300px"
+  };
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 * {
   padding: 0;
   margin: 0;
 }
+html,
+body {
+  height: 100%;
+}
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  min-height: 100%;
+}
+.el-header {
+  background-color: #545c64;
+  color: #fff;
+  line-height: 60px;
 }
 </style>
