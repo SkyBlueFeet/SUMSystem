@@ -1,20 +1,19 @@
 <template>
   <div class="admin">
     <el-container class="layout-container">
-      <el-header class="layout-header">
+      <el-header height="4rem" class="layout-header">
         <custom-header></custom-header>
       </el-header>
-      <el-container>
-        <el-aside class="layout-aside">
+      <el-container :style="mainStyle">
+        <el-aside width="20rem" class="layout-aside">
           <nav-menu></nav-menu>
         </el-aside>
         <el-container class="layout-main">
           <el-main>
-            <pack-crumd></pack-crumd>
             <div class="main-container">
               <slot></slot>
             </div>
-            <el-footer class="layout-footer">
+            <el-footer height="4rem" class="layout-footer">
               <custom-footer></custom-footer>
             </el-footer>
           </el-main>
@@ -31,7 +30,7 @@ import { Header, Container, Main, Aside, Footer, PageHeader } from "element-ui";
 import NavMenu from "@/components/NavMenu";
 import CustomHeader from "@/components/CustomHeader";
 import CustomFooter from "@/components/CustomFooter";
-import PackCrumd from "@/components/PackCrumd";
+import CustomCrumd from "@/components/CustomCrumd";
 
 Vue.use(Container);
 Vue.use(Footer);
@@ -46,56 +45,26 @@ Vue.use(PageHeader);
   components: {
     NavMenu,
     CustomHeader,
-    PackCrumd,
+    CustomCrumd,
     CustomFooter
   }
 })
 export default class layout extends Vue {
-  headerHeight = "72px";
-  asideWidth = "300px";
-  layoutIndex = 200;
-  headerStyle = {
-    width: "100%",
-    height: this.headerHeight,
-    position: "fixed",
-    top: "0",
-    left: "0",
-    zIndex: this.layoutIndex
-  };
-  asideStyle = {
-    width: this.asideWidth,
-    height: "100%",
-    position: "fixed",
-    top: this.headerHeight,
-    left: "0",
-    zIndex: this.layoutIndex
-  };
-  mainStyle = {
-    position: "absolute",
-    left: this.asideStyle.width,
-    top: this.headerStyle.height,
-    width: "calc(100% - " + this.asideStyle.width + ")",
-    height: "100%"
-  };
-  footerStyle = {
-    position: "absolute",
-    bottom: 0,
-    left: this.asideStyle.width,
-    width: "calc(100% - " + this.asideStyle.width + ")"
-  };
   goBack() {
     console.log("go back");
   }
+  mainStyle = {};
 }
 </script>
 
 <style lang="scss">
-$headerHeight: 72px;
-$asideWidth: 300px;
+$headerHeight: 4.3rem;
+$asideWidth: 20rem;
 $layoutIndex: 200;
 .admin {
   .main-container {
-    margin: 15px;
+    padding: 20px;
+    min-height: calc(100% - 8rem);
   }
   .el-header {
     background-color: #fff;
@@ -111,21 +80,25 @@ $layoutIndex: 200;
   }
   .layout-aside {
     width: $asideWidth;
-    height: 100%;
+    height: calc(100% - #{$headerHeight});
     position: fixed;
     top: $headerHeight;
     left: 0;
     z-index: $layoutIndex;
+    background-color: #fff;
   }
   .layout-main {
     position: absolute;
     left: $asideWidth;
     top: $headerHeight;
     width: calc(100% - #{$asideWidth});
-    // height: 100%;
+    min-height: calc(100% - #{$headerHeight});
   }
   .layout-footer {
     width: 100%;
+    position: relative;
+    top: 40px;
+    line-height: 4rem;
     // position: absolute;
     // top: calc(100vh - #{$headerHeight});
     // left: $asideWidth;

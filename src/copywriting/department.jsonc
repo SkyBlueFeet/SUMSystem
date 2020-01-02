@@ -1,0 +1,42 @@
+[
+    {
+        "createTime": "2016-05-03",
+        "name": "文艺部",
+        "index": "wenyi"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "体育部",
+        "index": "tiyu"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "宣传部",
+        "index": "xuanchuan"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "生活部",
+        "index": "shenghuo"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "外联部",
+        "index": "wailian"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "学习部",
+        "index": "xuexi"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "秘书处",
+        "index": "mishu"
+    },
+    {
+        "createTime": "2016-05-03",
+        "name": "礼仪部",
+        "index": "liyi"
+    }
+]

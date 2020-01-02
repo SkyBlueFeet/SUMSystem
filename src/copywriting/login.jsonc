@@ -1,6 +1,6 @@
 {
-    "bgName": "login.jpg", // src/assets目录下
-    "defaultLoginType": "student",
+    "bgName": "login.jpg", 
+    "defaultLoginType": "学生",
     "rules": {
         "account": [
         {
@@ -10,7 +10,7 @@
         },
         {
             "min": 5,
-            "max": 12,
+            "max": 13,
             "message": "应为教师工号或者学号",
             "trigger": "blur"
         }],

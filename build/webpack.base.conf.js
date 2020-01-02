@@ -31,7 +31,8 @@ module.exports = {
         extensions: ['.js', '.vue', '.json'],
         alias: {
             vue$: 'vue/dist/vue.esm.js',
-            '@': resolve('src')
+            '@': resolve('src'),
+            '@root': resolve()
         }
     },
     module: {
@@ -54,8 +55,7 @@ module.exports = {
                 }
             }],
             threadPool: happyThreadPool
-
-        })
+        }),
     ],
     node: {
         // prevent webpack from injecting useless setImmediate polyfill because Vue

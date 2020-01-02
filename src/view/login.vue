@@ -5,6 +5,7 @@
       <h1>欢迎使用学生会信息系统</h1>
     </div>
     <el-form
+      v-loading="loading"
       :model="loginForm"
       :rules="rules"
       ref="loginForm"
@@ -14,13 +15,7 @@
     >
       <h2>登录</h2>
       <el-form-item prop="account">
-        <el-input
-          prefix-icon="el-icon-user"
-          v-model="loginForm.account"
-          placeholder="学号"
-          autofocus
-        >
-        </el-input>
+        <el-input prefix-icon="el-icon-user" v-model="loginForm.account" placeholder="学号" autofocus></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
@@ -29,38 +24,25 @@
           placeholder="密码"
           show-password
           autofocus
-        >
-        </el-input>
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-radio-group v-model="loginForm.loginType">
-          <el-radio label="student">
-            学生
-          </el-radio>
-          <el-radio label="teacher">
-            教师
-          </el-radio>
+          <el-radio label="学生">学生</el-radio>
+          <el-radio label="教师">教师</el-radio>
         </el-radio-group>
         <el-checkbox-group v-model="isSave">
           <el-checkbox>记住密码</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item style="width:100%">
-        <el-button
-          type="primary"
-          style="width:100%;"
-          @click="handleSubmit('loginForm')"
-        >
-          登录
-        </el-button>
+        <el-button type="primary" style="width:100%;" @click="handleSubmit('loginForm')">登录</el-button>
       </el-form-item>
       <el-form-item>
-        <el-link href="/doc/首次登录须知" :underline="false">
-          首次登录须知
-        </el-link>
+        <el-link @click="firstLoginDoc">首次登录须知</el-link>
       </el-form-item>
     </el-form>
-    <el-footer class="layout-footer">
+    <el-footer height="4rem" class="layout-footer">
       <custom-footer></custom-footer>
     </el-footer>
   </div>
@@ -82,6 +64,9 @@ import {
   Link
 } from "element-ui";
 import CustomFooter from "../components/CustomFooter";
+import { member } from "@/apis/feild";
+import record_user from "@/utils/record_login";
+import reqConfig from '@/utils/reqConfig';
 Vue.use(Button);
 Vue.use(Form);
 Vue.use(FormItem);
@@ -99,12 +84,25 @@ Vue.use(Link);
 })
 export default class login extends Vue {
   isSave = false;
+  loading = false;
   loginConfig = require("@/copywriting/login.jsonc");
   loginForm = {
-    account: "admin",
-    password: "123456789",
+    account: "161400002102",
+    password: "mayakun123",
     loginType: this.loginConfig.defaultLoginType
   };
+
+  firstLoginDoc() {
+    this.$router.push({
+      name: "article",
+      query: {
+        type: "others",
+        name: "首次登录须知"
+      }
+    });
+  }
+
+  open() {}
 
   get bgName() {
     return require(`@/assets/${this.loginConfig.bgName}`);
@@ -122,27 +120,64 @@ export default class login extends Vue {
   }
 
   handleSubmit(formName) {
-    this.$refs[formName].validate(valid => {
+    this.$refs[formName].validate(async valid => {
       if (valid) {
-        this.$store.state.isLogin = true;
-        this.$router.push({ name: "index" });
+        //
+        this.loading = true;
+
+        let lUser = new member();
+        lUser.account = this.loginForm.account;
+        lUser.password = this.loginForm.password;
+        lUser.type = this.loginForm.loginType;
+        lUser.name = "skyblue";
+        lUser.number = "123456789";
+        lUser.position = "学生会主席";
+        lUser.alevel = 9;
+
+        member.list();
+
+        let res = await this.$axios({
+          url: "/app/login",
+          method: "post",
+          data: lUser
+        });
+        if (res.key === 201) {
+          this.$message({ message: res.message, type: "success" });
+          this.$store.state.isLogin = true;
+          this.$store.state.user = res.user;
+          this.$router.push({ name: this.redirect });
+          record_user.save(res.user);
+        } else {
+          const h=this.$createElement;
+          this.$message({
+            message: h("p", null, [
+              h("span", null, "登录失败, "),
+              h("i", { style: "color: teal" }, "请检查账号或者密码!")
+            ]),
+            type: "warning"
+          });
+        }
+        this.loading = false;
       } else {
-        console.log("error submit!!");
+        this.$message.warning("请检查表单");
         return false;
       }
     });
   }
-  created() {}
+  async created() {
+    this.redirect || this.redirect === "article"
+      ? (this.redirect = this.$route.query.redirect)
+      : (this.redirect = "index");
+  }
   preventDefault() {
     document.body.style.overflow = "auto";
   }
-
-  // get loginbg() {
-  //   return require(`@/assets/${this.loginConfig.bgName}`);
-  // }
 }
 </script>
 <style lang="scss" scoped>
+h1 {
+  color: #fff;
+}
 .login {
   h2 {
     margin: 30px;

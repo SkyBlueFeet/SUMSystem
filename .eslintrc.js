@@ -25,7 +25,8 @@ module.exports = {
         // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
         // https://github.com/standard/standard/blob/master/docs/RULES-en.md
         'standard',
-        'eslint:recommended'
+        'eslint:recommended',
+        'G:\\ubuntu开发环境\\VSCode开发环境\\.eslintrc.js'
     ],
     // required to lint *.vue files
     plugins: ['html'], //

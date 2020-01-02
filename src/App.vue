@@ -68,4 +68,8 @@ body {
   color: #fff;
   line-height: 60px;
 }
+.el-table__row{
+  td:not(.is-hidden):last-child{
+  right:-1px;}
+  }
 </style>

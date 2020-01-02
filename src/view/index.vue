@@ -6,41 +6,37 @@
       </div>
     </div>
     <el-carousel :interval="3000">
-      <el-carousel-item
-        v-for="(item, index) in banner"
-        :key="index"
-        arrow="never"
-      >
-        <router-link :to="{ path: item.link }">
-          <el-image :src="item.name" @error="test(item.name)"> </el-image>
-          <!-- <img :title="item.title" :src="item.name" :alt="item.title" /> -->
+      <el-carousel-item v-for="(item, index) in banner" :key="index" arrow="never">
+        <router-link :to="bannerNews(item)">
+          <el-image :src="item.name" @error="test(item.name)"></el-image>
         </router-link>
       </el-carousel-item>
     </el-carousel>
     <div class="news-container">
       <el-row :gutter="20" class="news-row" :style="rowStyle">
         <template v-for="(item, index) of news.newsFeild">
-          <el-col :span="12" :style="colStyle" :key="index">
+          <el-col :span="18" :style="colStyle" :key="index">
             <el-card>
               <div slot="header" class="clearfix">
                 <span>{{ item.name }}</span>
                 <el-button class="news-more" type="text">
-                  More<i class="el-icon-arrow-right"></i>
+                  More
+                  <i class="el-icon-arrow-right"></i>
                 </el-button>
               </div>
-              <div
-                v-for="(news, index) in item.newsItem"
-                :key="index"
-                class="news-item"
-              >
-                <div class="news-item-title" :title="news.title">
-                  <el-link :underline="false" :title="news.title">
-                    {{ news.title }}
-                  </el-link>
-                </div>
-                <div class="news-item-date">
-                  {{ news.date }}
-                </div>
+              <div class="news-item">
+                <template v-for="(news, index) in item.newsItem">
+                  <div :key="index" class="news-row">
+                    <div class="news-row-title" :title="news.title">
+                      <el-link
+                        @click="viewNews(news.title)"
+                        :underline="false"
+                        :title="news.title"
+                      >{{ news.title }}</el-link>
+                    </div>
+                    <div class="news-row-date">{{ news.date }}</div>
+                  </div>
+                </template>
               </div>
             </el-card>
           </el-col>
@@ -53,6 +49,7 @@
 <script>
 import Vue from "vue";
 import Component from "vue-class-component";
+import reqConf from "@/utils/reqConfig";
 import {
   Carousel,
   CarouselItem,
@@ -79,20 +76,26 @@ Vue.use(Image);
 
 @Component
 export default class HelloWorld extends Vue {
-  news = require("@/copywriting/news.jsonc");
-  get banner() {
-    return this.news.banner.map((item, index) => {
-      if (!item.name.startsWith("/"))
-        item.name = require(`@/assets/banner/${item.name}`);
-      return item;
-    });
-  }
+  news = {};
+  banner = [];
+  logo = {};
 
-  logo = {
-    Img: require(`@/assets/${this.news.logo.name}`),
-    width: this.news.logo.width,
-    height: this.news.logo.height
-  };
+  // get banner() {
+  //   return this.news.banner.map((item, index) => {
+  //     if (!item.name.startsWith("/"))
+  //       item.name = require(`@/assets/${item.name}`);
+  //     return item;
+  //   });
+  // }
+  bannerNews(item) {
+    return {
+      name: "article",
+      query: {
+        type: "news",
+        name: item.title
+      }
+    };
+  }
 
   rowStyle = {
     margin: "25px 0px"
@@ -103,10 +106,34 @@ export default class HelloWorld extends Vue {
   // lifecycle hook
   mounted() {}
 
-  created() {}
+  viewNews(newName) {
+    this.$router.push({
+      name: "article",
+      query: {
+        type: "news",
+        name: newName
+      }
+    });
+  }
+
+  async created() {
+    this.$store.state.isLoading = true;
+    this.news = await reqConf("news.json");
+    this.banner = this.news.banner.map((item, index) => {
+      if (!item.name.startsWith("/"))
+        item.name = require(`@/assets/${item.name}`);
+      return item;
+    });
+    this.logo = {
+      Img: require(`@/assets/${this.news.logo.name}`),
+      width: this.news.logo.width,
+      height: this.news.logo.height
+    };
+    this.$store.state.isLoading = false;
+  }
 
   test(item) {
-    alert(item);
+    this.$message.error(`无法加载${item}`);
   }
 
   // computed
@@ -128,7 +155,6 @@ export default class HelloWorld extends Vue {
   }
 
   &-row {
-    width: 100%;
     margin-left: 25px;
   }
   &-more {
@@ -146,6 +172,11 @@ export default class HelloWorld extends Vue {
     }
   }
   &-item {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+  }
+  &-row {
     &-title,
     &-date {
       font-size: 12px;

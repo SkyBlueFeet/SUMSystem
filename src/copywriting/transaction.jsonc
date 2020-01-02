@@ -1,0 +1,300 @@
+{
+    "format": "yyyy-MM-dd",
+    "positionList": [
+        { "label": "会员", "value": "会员" },
+        { "label": "副部长", "value": "副部长" },
+        { "label": "部长", "value": "部长" },
+        { "label": "教师", "value": "教师" },
+        { "label": "其他", "value": "其他" }
+    ],
+    "alevelOption": [
+        { "label": "NORMAL", "value": 1 },
+        { "label": "ADMIN", "value": 5 },
+        { "label": "ROOT", "value": 9 }
+    ],
+    "rules": {
+        "member": {
+            "name": [
+                {
+                    "required": true,
+                    "message": "请输入成员姓名",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 15,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "account": [
+                {
+                    "required": true,
+                    "message": "请输入学号/教工号",
+                    "trigger": "blur"
+                },
+                {
+                    "type": "number",
+                    "message": "格式不正确",
+                    "trigger": "blur"
+                }
+            ],
+            "joinTime": [
+                { "required": true, "message": "请输入日期", "trigger": "blur" }
+            ],
+            "position": [
+                {
+                    "required": true,
+                    "message": "请选择职位",
+                    "trigger": "change"
+                }
+            ],
+            "alevel": [
+                {
+                    "required": true,
+                    "message": "请选择账号等级",
+                    "trigger": "blur"
+                }
+            ],
+            "type": [
+                {
+                    "required": true,
+                    "message": "请选择身份",
+                    "trigger": "change"
+                }
+            ],
+            "number": [
+                {
+                    "required": true,
+                    "message": "请输入联系方式",
+                    "trigger": "blur"
+                },
+                {
+                    "type": "number",
+                    "message": "格式不正确",
+                    "trigger": "blur"
+                }
+            ]
+        },
+        "finance": {
+            "applyName": [
+                {
+                    "required": true,
+                    "message": "请输入条目姓名",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 3,
+                    "max": 20,
+                    "message": "长度在 3 到 20 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "amount": [
+                {
+                    "required": true,
+                    "message": "请输入金额",
+                    "trigger": "blur"
+                },
+                {
+                    "type": "number",
+                    "message": "格式不正确",
+                    "trigger": "blur"
+                }
+            ],
+            "use": [
+                {
+                    "required": true,
+                    "message": "请说明用途",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 10,
+                    "message": "使用最少10个字符说明用途",
+                    "trigger": "blur"
+                }
+            ],
+            "applicant": [
+                {
+                    "required": true,
+                    "message": "请输入申请人姓名",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 15,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "applicaTime": [
+                {
+                    "required": true,
+                    "message": "请选择申请时间",
+                    "trigger": "blur"
+                }
+            ],
+            "number": [
+                {
+                    "required": true,
+                    "message": "请输入联系方式",
+                    "trigger": "blur"
+                },
+                {
+                    "type": "number",
+                    "message": "格式不正确",
+                    "trigger": "blur"
+                }
+            ]
+        },
+        "goods": {
+            "name": [
+                {
+                    "required": true,
+                    "message": "请输入物品姓名",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 15,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "unitPrice": [
+                {
+                    "required":true,
+                    "message":"请输入金额",
+                    "trigger":"blur"
+                },
+                {
+                    "type": "number",
+                    "message": "请输入金额",
+                    "trigger": "blur"
+                }
+            ],
+            "buyTime": [
+                {
+                    "required": true,
+                    "message": "请选择购买时间",
+                    "trigger": "blur"
+                }
+            ]
+        },
+        "document": {
+            "fileName": [
+                {
+                    "required": true,
+                    "message": "请输入文件名称",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 50,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "principal": [
+                {
+                    "required": true,
+                    "message": "请输入负责人姓名",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 15,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "department": [
+                { "required": true, "message": "请选择部门", "trigger": "blur" }
+            ],
+            "archiveDate": [
+                {
+                    "required": true,
+                    "message": "请选择存档日期",
+                    "trigger": "blur"
+                }
+            ]
+        },
+        "record": {
+            "goodsName": [
+                { "required": true, "message": "请选择物品", "trigger": "blur" }
+            ],
+            "returnNumber": [
+                {
+                    "required": true,
+                    "message": "请输入归还人电话",
+                    "trigger": "blur"
+                },
+                {
+                    "type": "number",
+                    "message": "格式不正确",
+                    "trigger": "blur"
+                }
+            ],
+            "lenderNumber": [
+                {
+                    "required": true,
+                    "message": "请输入出借人电话",
+                    "trigger": "blur"
+                },
+                {
+                    "type": "number",
+                    "message": "格式不正确",
+                    "trigger": "blur"
+                }
+            ],
+            "department": [
+                { "required": true, "message": "请选择部门", "trigger": "blur" }
+            ],
+            "returnTime": [
+                {
+                    "required": true,
+                    "message": "请选择归还时间",
+                    "trigger": "blur"
+                }
+            ],
+            "lendTime": [
+                {
+                    "required": true,
+                    "message": "请选择出借时间",
+                    "trigger": "blur"
+                }
+            ],
+            "lender": [
+                {
+                    "required": true,
+                    "message": "请输入出借人",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 15,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ],
+            "returnee": [
+                {
+                    "required": true,
+                    "message": "请输入归还人",
+                    "trigger": "blur"
+                },
+                {
+                    "min": 2,
+                    "max": 15,
+                    "message": "长度在 2 到 15 个字符",
+                    "trigger": "blur"
+                }
+            ]
+        }
+    },
+    "resMessage": {
+        "edit": "编辑",
+        "add": "添加",
+        "delete": "删除"
+    }
+}

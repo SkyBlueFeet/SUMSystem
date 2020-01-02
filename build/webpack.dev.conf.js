@@ -54,15 +54,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'index.html',
-            inject: true
+            inject: true,
+            favicon: utils.resolve('logo.png')
         }),
         // copy custom static assets
-        new CopyWebpackPlugin([
-            {
-                from: utils.resolve('static'),
-                to: config.dev.assetsSubDirectory,
-                ignore: ['.*']
-            }])
+        new CopyWebpackPlugin([{
+            from: utils.resolve('static'),
+            to: config.dev.assetsSubDirectory,
+            ignore: ['.*']
+        }])
     ]
 });
 
@@ -82,8 +82,8 @@ module.exports = new Promise((resolve, reject) => {
                 compilationSuccessInfo: {
                     messages: [`正在运行: http://${devWebpackConfig.devServer.host}:${port}`]
                 },
-                onErrors: config.dev.notifyOnErrors
-                    ? utils.createNotifierCallback() : undefined
+                onErrors: config.dev.notifyOnErrors ?
+                    utils.createNotifierCallback() : undefined
             }));
 
             resolve(devWebpackConfig);
