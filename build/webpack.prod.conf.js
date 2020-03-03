@@ -25,8 +25,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     devtool: config.build.productionSourceMap ? config.build.devtool : false,
     output: {
         path: config.build.assetsRoot,
-        filename: utils.assetsPath('js/[name].[chunkhash].js'),
-        chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
+        filename: utils.assetsPath('js/[name].js'),
+        chunkFilename: utils.assetsPath('js/[name].js')
     },
     plugins: [
         // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -36,7 +36,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         // extract css into its own file
         new MiniCssExtractPlugin({
             filename: utils.assetsPath('css/[name].min.css'),
-            chunkFilename: utils.assetsPath('css/[name].[contenthash].css')
+            chunkFilename: utils.assetsPath('css/[name].css')
         }),
 
         // generate dist index.html with correct asset hash for caching.

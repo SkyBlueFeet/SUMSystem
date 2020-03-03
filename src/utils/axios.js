@@ -10,7 +10,7 @@ import router from '@/app/router';
 
 const axiosConfig = {
     method: 'post',
-    // baseURL: process.env !== 'production' ? '/api' : '',
+    baseURL: process.env !== 'production' ? '/api' : '',
     // 请求头信息
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
@@ -39,7 +39,7 @@ export default function $axios(options) {
             headers: axiosConfig.headers,
             method: axiosConfig.method,
             withCredentials: axiosConfig.withCredentials,
-            transformResponse: [function(data) {}]
+            transformResponse: [function (data) { }]
         });
 
         // request 拦截器
@@ -113,51 +113,51 @@ export default function $axios(options) {
 
             if (response.request.responseText && typeof JSON.parse(response.request.responseText) === 'object' && 'key' in JSON.parse(response.request.responseText)) {
                 switch (JSON.parse(response.request.responseText).key) {
-                case 400:
-                    message = '请求错误';
-                    break;
+                    case 400:
+                        message = '请求错误';
+                        break;
 
-                case 401:
-                    message = '登录已失效,请重新登录';
-                    break;
+                    case 401:
+                        message = '登录已失效,请重新登录';
+                        break;
 
-                case 403:
-                    message = '拒绝访问';
-                    break;
+                    case 403:
+                        message = '拒绝访问';
+                        break;
 
-                case 404:
-                    message = `请求地址出错: ${response.config.url}`;
-                    break;
+                    case 404:
+                        message = `请求地址出错: ${response.config.url}`;
+                        break;
 
-                case 408:
-                    message = '请求超时';
-                    break;
+                    case 408:
+                        message = '请求超时';
+                        break;
 
-                case 500:
-                    message = '服务器内部错误';
-                    break;
+                    case 500:
+                        message = '服务器内部错误';
+                        break;
 
-                case 501:
-                    message = '服务未实现';
-                    break;
+                    case 501:
+                        message = '服务未实现';
+                        break;
 
-                case 502:
-                    message = '网关错误';
-                    break;
+                    case 502:
+                        message = '网关错误';
+                        break;
 
-                case 503:
-                    message = '服务不可用';
-                    break;
+                    case 503:
+                        message = '服务不可用';
+                        break;
 
-                case 504:
-                    message = '网关超时';
-                    break;
+                    case 504:
+                        message = '网关超时';
+                        break;
 
-                case 505:
-                    message = 'HTTP版本不受支持';
-                    break;
+                    case 505:
+                        message = 'HTTP版本不受支持';
+                        break;
 
-                default:
+                    default:
                 }
             }
 
@@ -172,59 +172,59 @@ export default function $axios(options) {
             // throw err
             return data;
         },
-        err => {
-            if (err && err.response) {
-                switch (err.response.status) {
-                case 400:
-                    err.message = '请求错误';
-                    break;
+            err => {
+                if (err && err.response) {
+                    switch (err.response.status) {
+                        case 400:
+                            err.message = '请求错误';
+                            break;
 
-                case 401:
-                    err.message = '登录已失效,请重新登录';
-                    break;
+                        case 401:
+                            err.message = '登录已失效,请重新登录';
+                            break;
 
-                case 403:
-                    err.message = '拒绝访问';
-                    break;
+                        case 403:
+                            err.message = '拒绝访问';
+                            break;
 
-                case 404:
-                    err.message = `请求地址出错: ${err.response.config.url}`;
-                    break;
+                        case 404:
+                            err.message = `请求地址出错: ${err.response.config.url}`;
+                            break;
 
-                case 408:
-                    err.message = '请求超时';
-                    break;
+                        case 408:
+                            err.message = '请求超时';
+                            break;
 
-                case 500:
-                    err.message = '服务器内部错误';
-                    break;
+                        case 500:
+                            err.message = '服务器内部错误';
+                            break;
 
-                case 501:
-                    err.message = '服务未实现';
-                    break;
+                        case 501:
+                            err.message = '服务未实现';
+                            break;
 
-                case 502:
-                    err.message = '网关错误';
-                    break;
+                        case 502:
+                            err.message = '网关错误';
+                            break;
 
-                case 503:
-                    err.message = '服务不可用';
-                    break;
+                        case 503:
+                            err.message = '服务不可用';
+                            break;
 
-                case 504:
-                    err.message = '网关超时';
-                    break;
+                        case 504:
+                            err.message = '网关超时';
+                            break;
 
-                case 505:
-                    err.message = 'HTTP版本不受支持';
-                    break;
+                        case 505:
+                            err.message = 'HTTP版本不受支持';
+                            break;
 
-                default:
+                        default:
+                    }
                 }
+                Message.error(err.message);
+                return Promise.reject(err); // 返回接口返回的错误信息
             }
-            Message.error(err.message);
-            return Promise.reject(err); // 返回接口返回的错误信息
-        }
         );
 
         // 请求处理

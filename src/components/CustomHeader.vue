@@ -3,7 +3,7 @@
     <!-- <el-col :span="4" :offset="2">
       <el-link :underline="false">当前时间:{{ newDate }}</el-link>
     </el-col>-->
-    <el-col :span="1" :offset="3">
+    <el-col :span="2" :offset="2">
       <el-link :disabled="$route.name === 'index'" @click="toRouter('index')">学校动态</el-link>
     </el-col>
     <el-col :span="3" v-if="$store.state.isLogin">

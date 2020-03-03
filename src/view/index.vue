@@ -163,7 +163,7 @@ export default class HelloWorld extends Vue {
   }
   &-head {
     margin: 0 0 6px 0;
-    background-color: #245483;
+    // background-color: #245483;
     &-logo {
       height: 90px;
       width: auto;

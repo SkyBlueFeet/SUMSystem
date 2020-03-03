@@ -83,7 +83,7 @@ Vue.use(Link);
   }
 })
 export default class login extends Vue {
-  isSave = false;
+  isSave = true;
   loading = false;
   loginConfig = require("@/copywriting/login.jsonc");
   loginForm = {

@@ -13,7 +13,7 @@
         <el-form-item label="密码" prop="oldPwd">
           <el-input type="password" v-model="modify.oldPwd" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="newPwd">
+        <el-form-item label="新密码" prop="newPwd">
           <el-input type="password" v-model="modify.newPwd" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">

@@ -65,7 +65,7 @@
             @click.native.prevent="addNew('goods')"
             type="primary"
             icon="el-icon-plus"
-          >登记新成员</el-button>
+          >添加新物品</el-button>
         </div>
         <div class="pack-table">
           <el-table stripe border :data="goodsData">
@@ -180,6 +180,7 @@
             label-width="120px"
             class="demo-ruleForm"
           >
+          <label>{{status==="add"?"须知:新账号默认密码为12345678":"部分记录只能在创建时被修改"}}</label>
             <el-form-item hidden label="id" prop="id">
               <el-input readonly v-model="form.member.id"></el-input>
             </el-form-item>
@@ -235,6 +236,7 @@
             <el-form-item label="联系方式" prop="number">
               <el-input v-model.trim.number="form.member.number"></el-input>
             </el-form-item>
+
           </el-form>
           <div class="demo-drawer__footer">
             <el-button @click="cancelForm">取 消</el-button>
